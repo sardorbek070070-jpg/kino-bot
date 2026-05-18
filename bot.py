@@ -1,5 +1,4 @@
 import os
-import random
 import asyncio
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
@@ -22,9 +21,9 @@ from database import (
 load_dotenv()
 
 # -------------------- Holatlar --------------------
-WAITING_FOR_VIDEO, WAITING_FOR_CODE, WAITING_FOR_DESCRIPTION = range(3)
+WAITING_FOR_VIDEO, WAITING_FOR_CUSTOM_CODE, WAITING_FOR_DESCRIPTION = range(3)
 
-# -------------------- Bot va Webhook --------------------
+# -------------------- Webhook --------------------
 WEBHOOK_PATH = "/webhook"
 RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if not RENDER_EXTERNAL_HOSTNAME:
@@ -34,7 +33,7 @@ WEBHOOK_URL = f"https://{RENDER_EXTERNAL_HOSTNAME}{WEBHOOK_PATH}"
 # -------------------- Handlerlar --------------------
 async def start(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
-    register_user(user_id)
+    await register_user(user_id)
     await update.message.reply_text(
         "🎬 **Kino botiga xush kelibsiz!**\n\n"
         "Film kodini raqamlarda yuboring.\n"
@@ -49,9 +48,9 @@ async def admin(update: Update, context: CallbackContext):
     await update.message.reply_text(
         "🔧 **Admin panel**\n"
         "/addvideo - yangi video qo'shish\n"
-        "/delvideo <kod> - videoni o'chirish\n"
-        "/list - barcha videolar ro'yxati\n"
-        "/stats - bot statistikasi",
+        "/delvideo <kod> - o'chirish\n"
+        "/list - barcha videolar\n"
+        "/stats - statistika",
         parse_mode="Markdown"
     )
 
@@ -59,10 +58,10 @@ async def stats(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Siz admin emassiz!")
         return
-    total = get_total_users()
-    today = get_today_users()
-    week = get_week_users()
-    active = get_active_users_last_24h()
+    total = await get_total_users()
+    today = await get_today_users()
+    week = await get_week_users()
+    active = await get_active_users_last_24h()
     await update.message.reply_text(
         f"📊 **Statistika**\n\n"
         f"👥 Umumiy: {total}\n"
@@ -72,7 +71,7 @@ async def stats(update: Update, context: CallbackContext):
         parse_mode="Markdown"
     )
 
-# -------------------- Video qo'shish --------------------
+# -------------------- Video qo'shish (o'zimiz kod kiritamiz) --------------------
 async def addvideo_start(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Ruxsat yo‘q")
@@ -86,18 +85,19 @@ async def addvideo_video(update: Update, context: CallbackContext):
         return WAITING_FOR_VIDEO
     file_id = update.message.video.file_id
     context.user_data['file_id'] = file_id
-    await update.message.reply_text("🔢 Kodni kiriting (faqat raqamlar, masalan: 1001)")
-    return WAITING_FOR_CODE
+    await update.message.reply_text("🔢 Ushbu video uchun **kod** kiriting (faqat raqamlar):")
+    return WAITING_FOR_CUSTOM_CODE
 
-async def addvideo_code(update: Update, context: CallbackContext):
+async def addvideo_custom_code(update: Update, context: CallbackContext):
     code = update.message.text.strip()
     if not code.isdigit():
-        await update.message.reply_text("❌ Kod faqat raqamlardan iborat bo‘lishi kerak. Qaytadan kiriting.")
-        return WAITING_FOR_CODE
-    existing = get_video(code)
+        await update.message.reply_text("❌ Kod faqat raqamlardan iborat bo‘lishi kerak. Qaytadan kiriting:")
+        return WAITING_FOR_CUSTOM_CODE
+    # Kod unikalligini tekshirish
+    existing = await get_video(code)
     if existing:
-        await update.message.reply_text(f"⚠️ {code} kodi allaqachon mavjud. Boshqa kod kiriting.")
-        return WAITING_FOR_CODE
+        await update.message.reply_text(f"⚠️ `{code}` kodi allaqachon mavjud. Boshqa kod kiriting:", parse_mode="Markdown")
+        return WAITING_FOR_CUSTOM_CODE
     context.user_data['code'] = code
     await update.message.reply_text("✍️ Tavsif yozing (yoki /skip o‘tkazib yuborish)")
     return WAITING_FOR_DESCRIPTION
@@ -109,7 +109,7 @@ async def addvideo_description(update: Update, context: CallbackContext):
     if not file_id or not code:
         await update.message.reply_text("Xatolik, qaytadan /addvideo bosing")
         return ConversationHandler.END
-    add_video(code, file_id, description)
+    await add_video(code, file_id, description)
     await update.message.reply_text(
         f"✅ Video saqlandi!\n**Kod:** `{code}`\n**Tavsif:** {description}",
         parse_mode="Markdown"
@@ -123,7 +123,7 @@ async def addvideo_skip(update: Update, context: CallbackContext):
     if not file_id or not code:
         await update.message.reply_text("Xatolik, qaytadan /addvideo bosing")
         return ConversationHandler.END
-    add_video(code, file_id, "")
+    await add_video(code, file_id, "")
     await update.message.reply_text(
         f"✅ Video saqlandi!\n**Kod:** `{code}`\nTavsifsiz",
         parse_mode="Markdown"
@@ -144,9 +144,9 @@ async def delvideo(update: Update, context: CallbackContext):
         await update.message.reply_text("📛 Kodni kiriting: /delvideo 123")
         return
     code = context.args[0]
-    video = get_video(code)
+    video = await get_video(code)
     if video:
-        delete_video(code)
+        await delete_video(code)
         await update.message.reply_text(f"✅ `{code}` o‘chirildi.", parse_mode="Markdown")
     else:
         await update.message.reply_text(f"❌ `{code}` topilmadi.", parse_mode="Markdown")
@@ -155,7 +155,7 @@ async def listvideos(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Ruxsat yo‘q")
         return
-    videos = list_all_videos()
+    videos = await list_all_videos()
     if not videos:
         await update.message.reply_text("📭 Hech qanday video yo‘q.")
         return
@@ -164,14 +164,15 @@ async def listvideos(update: Update, context: CallbackContext):
         text += f"🔹 Kod: `{code}` — {desc or 'Tavsifsiz'}\n"
     await update.message.reply_text(text, parse_mode="Markdown")
 
+# -------------------- Foydalanuvchi kod yuborganda --------------------
 async def handle_code(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
-    register_user(user_id)
+    await register_user(user_id)
     text = update.message.text.strip()
     if not text.isdigit():
         await update.message.reply_text("🤔 Iltimos, faqat raqamlardan iborat kod yuboring.")
         return
-    video = get_video(text)
+    video = await get_video(text)
     if video:
         file_id, description = video
         caption = f"🎬 Kodi: {text}\n📖 {description}" if description else f"🎬 Kodi: {text}"
@@ -193,13 +194,11 @@ async def webhook_handler(request: Request):
 async def healthcheck(request: Request):
     return JSONResponse({"status": "ok"})
 
-# -------------------- Asosiy --------------------
 bot_application = None
 
 async def main():
     global bot_application
-    init_db()
-
+    await init_db()
     bot_application = Application.builder().token(BOT_TOKEN).build()
 
     bot_application.add_handler(CommandHandler("start", start))
@@ -213,7 +212,7 @@ async def main():
         entry_points=[CommandHandler("addvideo", addvideo_start)],
         states={
             WAITING_FOR_VIDEO: [MessageHandler(filters.VIDEO, addvideo_video)],
-            WAITING_FOR_CODE: [MessageHandler(filters.TEXT & ~filters.COMMAND, addvideo_code)],
+            WAITING_FOR_CUSTOM_CODE: [MessageHandler(filters.TEXT & ~filters.COMMAND, addvideo_custom_code)],
             WAITING_FOR_DESCRIPTION: [
                 CommandHandler("skip", addvideo_skip),
                 MessageHandler(filters.TEXT & ~filters.COMMAND, addvideo_description)
