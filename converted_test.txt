@@ -1,0 +1,1392 @@
+Mana, faqat raqamlangan savollar (javoblarsiz):
+A. 1. Ierarxik va tarmoqli modellarining kamchiliklari natijasida ma’lumotlarning yangi qaysi modeli hosil bo’ladi ?
+B. relyasion modeli
+C. Matematik
+D. Fizik model
+ANSWER: B
+
+2. Relyasion model?
+A. MB tarkibini soddalashtirishga qaratilgan
+B. MB tarkibini murakkablashtirishga qaratilgan
+C. unga mos atribut nomi nomlanuvchi maydon bo‘lib hisoblanadi
+D. Yo‘q
+ANSWER: A
+
+3. MB ichida jadval alohida nomlanadi?
+A. Jadval har bir ustuni -
+B. unga mos atribut nomi nomlanuvchi maydon bo‘lib hisoblanadi
+C. MB tarkibini murakkablashtirishga qaratilgan
+D. unga mos  bo’lmagan atribut nomi nomlanuvchi maydon bo‘lib hisoblanadi
+ANSWER: A
+
+4. Bir maydonda qanchagacha jadvallar qatnashishi mumkin?
+A. Bir nechtagacha
+B. 2ta
+C. Hech qancha
+D. 1ta
+ANSWER: A
+
+5. Bekobod tumani markazi?
+A. Zafar
+B. Bo’ka
+C. G’azarkent
+D. Shayhontohir
+ANSWER: A
+
+6. Bo’ka tumani markazi?
+A. Bo’ka
+B. Zafar
+C. G’azarkent
+D. Shayhontohir
+ANSWER: A
+
+7. Bo’stonli tumani markazi?
+A. G’azalkent
+B. Zafar
+C. Bo’ka
+D. Shayhontohir
+ANSWER: A
+
+8. Qashqadaryo viloyati markazi?
+A. Qarshi
+B. Beshkent
+C. Shahrisabz
+D. Koson
+ANSWER: A
+
+9. Shahrisabz tumani markazi?
+A. Shahrisbaz
+B. Chorshanbe
+C. Kitob
+D. Muminobod
+ANSWER: A
+
+10. Kartografiyada GATdan foydalanishda, ma’lumotlar bazasining relyasion modelida necha turkum ma’lumotlar saqlanadi?
+A. 2
+B. 1
+C. 3
+D. 4
+ANSWER: A
+
+11. ma’lumotlar bazasining relyasion modelida saqlangan model turlari grafikli va atributli?
+A. Grafikli
+B. Hoshilayli va grafikli
+C. Hoshiyali atributli
+D. Yo‘q
+ANSWER: A
+
+12. ma’lumotlar bazasining relyasion modelida saqlangan model turlari grafikli va atributli?
+A. Grafikli
+B. Hoshilayli va grafikli
+C. Hoshiyali atributli
+D. Yo‘q
+ANSWER: A
+
+13. ob’yekt atributlarini o‘z ichiga olgan jadval?
+A. atributiv jadval
+B. Grafikli jadval
+C. Hoshilayli jadval
+D. Hoshiyali atributli jadval
+ANSWER: A
+
+14. Ob’yekt yoki hodisalarning miqdor va sifat jihatdan tavsifi haqidagi raqamli yoki matn – grafikli ko‘rinishidagi axborotlardir?
+A. Kartografik atributiv axborot
+B. Kartografik grafik axborot
+C. Hoshilayli axborot
+D. Hoshiyali atributli jadval
+ANSWER: A
+
+15. Istalgan GATda atributiv ma’lumotlar bazasiga murojaat etish necha xil usulda amalga oshiriladi?
+A. 2
+B. 1
+C. Amalga oshirib bo’lmaydi
+D. 3
+ANSWER: A
+
+16. Istalgan GATda atributiv ma’lumotlar bazasiga murojaat etish necha xil usulda amalga oshirilish usullari?
+A. Sql so’rov tili, QBE namuna shakli
+B. Sql so’rov tili,  Gat orqali
+C. Amalga oshirib bo’lmaydi
+D. Gat, QBE namuna shakli
+ANSWER: A
+
+17. DiGATayzyer  ma’lumotlarni kiritishga eng ko‘p qo‘llaniladigan texnik vosita bu?
+A. Skaner
+B. Foto aparat
+C. Telefon
+D. klavyatura
+ANSWER: A
+
+18. DiGATayzyer qanchalik formatda  aniqlikda malumot kiritish imkonini beradi?
+A. 1,5 m masofaga 0,08 mm
+B. 1,5 m masofaga 0,008 mm
+C. 1,05 m masofaga 0,08 mm
+D. Bunday imkoniyat yo’q
+ANSWER: A
+
+19. Foydalaniladigan texnik vositalarga mos ravishda ma’lumotlar necha xil usulda kiritiladi?
+A. 2
+B. 1
+C. 3
+D. 4
+ANSWER: A
+
+20. Fazoviy ma’lumotlarni qo‘lda kiritish uchun qaysi dastur ishlatiladi ishlatiladi?
+A. DiGATayzyer
+B. Gat
+C. Google map
+D. Vizir
+ANSWER: A
+
+21. Ko‘chirib o‘tkazish - ?
+A. grafik ob’yektni koordinata tekisligida to‘laligicha boshqa joyga ko‘chirib o‘tkazish
+B. grafik ob’yektni koordinata tekisligida to‘laligicha boshqa joyga ko‘chirib o‘tkazishni taqiqlash
+C. atributik ob’yektni koordinata tekisligida to‘laligicha boshqa joyga ko‘chirib o‘tkazish
+D. Nusxa olish
+ANSWER: A
+
+22. Ko‘chirib o‘tkazish - ?
+A. grafik ob’yektni koordinata tekisligida to‘laligicha boshqa joyga ko‘chirib o‘tkazish
+B. grafik ob’yektni koordinata tekisligida to‘laligicha boshqa joyga ko‘chirib o‘tkazishni taqiqlash
+C. atributik ob’yektni koordinata tekisligida to‘laligicha boshqa joyga ko‘chirib o‘tkazish
+D. Nusxa olish
+ANSWER: A
+
+23. Ma’lumotlarni umumlashtirishi - ?
+A. ma’lum atribut qiymatlarining tengligi aosida, masalan, hududlarni zonalashtirishda amalga oshiriladi  ==== Ularga ob’yektlarning xarakteristikalarini yoki ob’yektlarning fazoda bir-biriga nisbatan joylashuvini fazoda va tekislikdagi analitikgeometriya formulalari asosida hisoblash kiradi.
+B. qatlamlarning ustma-ust qo‘yilishi) eng keng tarqalgan va samarali vositalaridandir
+C. Ob’yektlar yaqinliligini tahlil qilishning vositalardan biri bufer  zonalar qurishdirish.
+D. Yo‘q
+ANSWER: A
+
+24. Geometrik funksiyalar - ?
+A. ==== #Ularga ob’yektlarning xarakteristikalarini yoki ob’yektlarning fazoda bir-biriga nisbatan joylashuvini fazoda va tekislikdagi analitikgeometriya formulalari asosida hisoblash kiradi.
+B. ma’lum atribut qiymatlarining tengligi aosida, masalan, hududlarni zonalashtirishda amalga oshiriladi
+C. qatlamlarning ustma-ust qo‘yilishi) eng keng tarqalgan va samarali vositalaridandir
+D. Ob’yektlar yaqinliligini tahlil qilishning vositalardan biri bufer  zonalar qurishdirish.
+ANSWER: A
+
+25. Overlit funksiyalari - ?
+A. Ularga ob’yektlarning xarakteristikalarini yoki ob’yektlarning fazoda bir-biriga nisbatan joylashuvini fazoda va tekislikdagi analitikgeometriya formulalari asosida hisoblash kiradi.
+B. ma’lum atribut qiymatlarining tengligi aosida, masalan, hududlarni zonalashtirishda amalga oshiriladi  ==== qatlamlarning ustma-ust qo‘yilishi) eng keng tarqalgan va samarali vositalaridandir
+C. Ob’yektlar yaqinliligini tahlil qilishning vositalardan biri bufer  zonalar qurishdirish.
+D. Yo‘q
+ANSWER: A
+
+26. Bufer zonalar qurish  - ?
+A. ==== #Ob’yektlar yaqinliligini tahlil qilishning vositalardan biri bufer  zonalar qurishdirish.   ==== ma’lum atribut qiymatlarining tengligi aosida, masalan, hududlarni zonalashtirishda amalga oshiriladi
+B. qatlamlarning ustma-ust qo‘yilishi) eng keng tarqalgan va samarali vositalaridandir
+C. Ularga ob’yektlarning xarakteristikalarini yoki ob’yektlarning fazoda bir-biriga nisbatan joylashuvini fazoda va tekislikdagi analitikgeometriya formulalari asosida hisoblash kiradi.
+D. Yo‘q
+ANSWER: A
+
+27. Tarmoq tahlili - ?
+A. foydalanuvchiga chiziqli ob’yektlarning (yo‘llar, elektr uzatish liniyalar va h.k.) fazoviy tarmoqlarini tahlil qilish imkonini beradi.  ==== ma’lum atribut qiymatlarining tengligi aosida, masalan, hududlarni zonalashtirishda amalga oshiriladi
+B. qatlamlarning ustma-ust qo‘yilishi) eng keng tarqalgan va samarali vositalaridandir  ==== Ularga ob’yektlarning xarakteristikalarini yoki ob’yektlarning fazoda bir-biriga nisbatan joylashuvini fazoda va tekislikdagi analitikgeometriya formulalari asosida hisoblash kiradi.
+C. Yo‘q
+D. Yo‘q
+ANSWER: A
+
+28. Nuqtali taqsimotlar - ?
+A. asosida ichki nuqtalar (ob’yektlar) juftliklari orasidagi lokal munosabatlar ham tahlil qilinad
+B. zichlik asosida baholanadi. Odatda hisoblashlar turli geografik hududlarni solishtirish uchun, masalan, gidrografik tarmoq qalinligi asosida olib boriladi.
+C. nuqtalar taqsimoti kabi olib boriladi, lekin zichlikni baholashda birlik yuzaga to‘g‘ri kelgan poligonlar soni emas, balki egallagan maydonning nisbiy ulushini baholash tushuniladi
+D. Ularga ob’yektlarning xarakteristikalarini yoki ob’yektlarning fazoda bir-biriga nisbatan joylashuvini fazoda va tekislikdagi analitikgeometriya formulalari asosida hisoblash kiradi.
+ANSWER: A
+
+29. Chiziqlar taqsimoti - ?
+A. zichlik asosida baholanadi. Odatda hisoblashlar turli geografik hududlarni solishtirish uchun, masalan, gidrografik tarmoq qalinligi asosida olib boriladi
+B. asosida ichki nuqtalar (ob’yektlar) juftliklari orasidagi lokal munosabatlar ham tahlil qilinad
+C. nuqtalar taqsimoti kabi olib boriladi, lekin zichlikni baholashda birlik yuzaga to‘g‘ri kelgan poligonlar soni emas, balki egallagan maydonning nisbiy ulushini baholash tushuniladi
+D. Ularga ob’yektlarning xarakteristikalarini yoki ob’yektlarning fazoda bir-biriga nisbatan joylashuvini fazoda va tekislikdagi analitikgeometriya formulalari asosida hisoblash kiradi.
+ANSWER: A
+
+30. Chiziqlar taqsimoti - ?
+A. zichlik asosida baholanadi. Odatda hisoblashlar turli geografik hududlarni solishtirish uchun, masalan, gidrografik tarmoq qalinligi asosida olib boriladi
+B. asosida ichki nuqtalar (ob’yektlar) juftliklari orasidagi lokal munosabatlar ham tahlil qilinad
+C. nuqtalar taqsimoti kabi olib boriladi, lekin zichlikni baholashda birlik yuzaga to‘g‘ri kelgan poligonlar soni emas, balki egallagan maydonning nisbiy ulushini baholash tushuniladi
+D. Ularga ob’yektlarning xarakteristikalarini yoki ob’yektlarning fazoda bir-biriga nisbatan joylashuvini fazoda va tekislikdagi analitikgeometriya formulalari asosida hisoblash kiradi.
+ANSWER: A
+
+31. Poligonlar taqsimoti  - ?
+A. nuqtalar taqsimoti kabi olib boriladi, lekin zichlikni baholashda birlik yuzaga to‘g‘ri kelgan poligonlar soni emas, balki egallagan maydonning nisbiy ulushini baholash tushuniladi
+B. zichlik asosida baholanadi. Odatda hisoblashlar turli geografik hududlarni solishtirish uchun, masalan, gidrografik tarmoq qalinligi asosida olib boriladi
+C. nuqtalar taqsimoti kabi olib boriladi, lekin zichlikni baholashda birlik yuzaga to‘g‘ri kelgan poligonlar soni emas, balki egallagan maydonning nisbiy ulushini baholash tushuniladi
+D. Ularga ob’yektlarning xarakteristikalarini yoki ob’yektlarning fazoda bir-biriga nisbatan joylashuvini fazoda va tekislikdagi analitikgeometriya formulalari asosida hisoblash kiradi.
+ANSWER: A
+
+32. GAT geografik ma’lumotlar bilan ishlovchi instrumentlar vositasining necha xil turi mavjud
+A. 3
+B. 2
+C. 1
+D. 4
+ANSWER: A
+
+33. Geoma’lumotlar bazasi  ?
+A. GAT-bu geografik axborotlar taqdim etadigan ma’lumotlar bazasi makoni bo‘lib vektor ob’yektlar, Rastrlar, tipologiya, tarmoq va boshqalarni o‘z ichiga oladi.
+B. GAT-bu yer yuzasidagi ob’yektlararo munosabat va boshqa ob’yektlarni ko‘rsatadigan intelektual xaritalar to‘plami
+C. GAT-bu mavjud to‘plamlar asosida yangi geografik ma’lumotlar olish vositasi. Uning funksiyasi mavjud axborotlarni qayta ishlash, tahlil qilish asosida yangi ma’lumot va natijalar olishga asoslanadi
+D. GAT-bu atrof muhit geografik ma’lumotlar bazasini o‘ziga hos tipi. GATning asosida dunyoni geografik aspektda ifodalovchi ma’lumotlar bazasi tarkibi yotadi
+ANSWER: A
+
+34. Geovizualizatsiya -  ?
+A. GAT-bu yer yuzasidagi ob’yektlararo munosabat va boshqa ob’yektlarni ko‘rsatadigan intelektual xaritalar to‘plami
+B. GAT-bu geografik axborotlar taqdim etadigan ma’lumotlar bazasi makoni bo‘lib vektor ob’yektlar, Rastrlar, tipologiya, tarmoq va boshqalarni o‘z ichiga oladi.
+C. GAT-bu mavjud to‘plamlar asosida yangi geografik ma’lumotlar olish vositasi. Uning funksiyasi mavjud axborotlarni qayta ishlash, tahlil qilish asosida yangi ma’lumot va natijalar olishga asoslanadi
+D. GAT-bu atrof muhit geografik ma’lumotlar bazasini o‘ziga hos tipi. GATning asosida dunyoni geografik aspektda ifodalovchi ma’lumotlar bazasi tarkibi yotadi
+ANSWER: A
+
+35. Geoqaytaishlash -  ?
+A. GAT-bu mavjud to‘plamlar asosida yangi geografik ma’lumotlar olish vositasi. Uning funksiyasi mavjud axborotlarni qayta ishlash, tahlil qilish asosida yangi ma’lumot va natijalar olishga asoslanadi
+B. GAT-bu geografik axborotlar taqdim etadigan ma’lumotlar bazasi makoni bo‘lib vektor ob’yektlar, Rastrlar, tipologiya, tarmoq va boshqalarni o‘z ichiga oladi.
+C. GAT-bu yer yuzasidagi ob’yektlararo munosabat va boshqa ob’yektlarni ko‘rsatadigan intelektual xaritalar to‘plami
+D. GAT-bu atrof muhit geografik ma’lumotlar bazasini o‘ziga hos tipi. GATning asosida dunyoni geografik aspektda ifodalovchi ma’lumotlar bazasi tarkibi yotadi
+ANSWER: A
+
+36. Vizualizatsiya  (grafik ko‘rinish) -  ?
+A. tasvirning genyeratsiyasi, shu jumladan kartografik va boshqa grafikalarni ko‘rinishi uskunalarda (monitorda).
+B. Animatsiya, dinamik jarayonlarniko‘rsatish uchun ishlatiladi, ya’ni statik tasvirlarning birin ketin ko‘rsatilishi, natijada tasvirlarning uzluksiz almashish illyuziyasi yaratiladi.
+C. GAT ma’lumotlarining har bir to‘plami atrofni o‘rab turgan ma’lum bir ob’yekt haqidagi tasavvurlarni shakllantiradi.
+D. GAT-bu atrof muhit geografik ma’lumotlar bazasini o‘ziga hos tipi. GATning asosida dunyoni geografik aspektda ifodalovchi ma’lumotlar bazasi tarkibi yotadi
+ANSWER: A
+
+37. Ma’lumotlarni kompilasiyalash -  ?
+A. Geoishlov yordamida avtomatlashtirish mumkin bo‘lgan tadbirlarni bajarish oldidan ma’lumotlarning sifatli va batafsil ekanligiga ishonch hosil qilish kerak hamda ularning ko‘plab QA/QS so‘rovlariga yaroqliligini nazorat qilish lozim.
+B. Animatsiya, dinamik jarayonlarniko‘rsatish uchun ishlatiladi, ya’ni statik tasvirlarning birin ketin ko‘rsatilishi, natijada tasvirlarning uzluksiz almashish illyuziyasi yaratiladi.
+C. Geoishlov - medellashtirish va tahlil qilish uchun hal qiluvchi muhit hisoblanadi.
+D. GAT-bu atrof muhit geografik ma’lumotlar bazasini o‘ziga hos tipi. GATning asosida dunyoni geografik aspektda ifodalovchi ma’lumotlar bazasi tarkibi yotadi
+ANSWER: A
+
+38. Ma’lumotlarni kompilasiyalash -  ?
+A. Geoishlov - medellashtirish va tahlil qilish uchun hal qiluvchi muhit hisoblanadi.
+B. Animatsiya, dinamik jarayonlarniko‘rsatish uchun ishlatiladi, ya’ni statik tasvirlarning birin ketin ko‘rsatilishi, natijada tasvirlarning uzluksiz almashish illyuziyasi yaratiladi.
+C. Geoishlov yordamida avtomatlashtirish mumkin bo‘lgan tadbirlarni bajarish oldidan ma’lumotlarning sifatli va batafsil ekanligiga ishonch hosil qilish kerak hamda ularning ko‘plab QA/QS so‘rovlariga yaroqliligini nazorat qilish lozim.
+D. GAT-bu atrof muhit geografik ma’lumotlar bazasini o‘ziga hos tipi. GATning asosida dunyoni geografik aspektda ifodalovchi ma’lumotlar bazasi tarkibi yotadi
+ANSWER: A
+
+39. Kartografiya -  ?
+A. Geoishlovning rivojlangan uskunalari turli masshtabdagi kartografik tasavvurlarni hosil qilish, moddiylashtirish, bosib chiqariladigan kartografiya mahsulotlarini yaratishda sifatni ta’minlash va nazorat qilish (QA/QS), ish jarayonlarining aksar qismini jamlash va avtomatlashtirish uchun foydalaniladi.
+B. Geoishlov - medellashtirish va tahlil qilish uchun hal qiluvchi muhit hisoblanadi
+C. Geoishlov yordamida avtomatlashtirish mumkin bo‘lgan tadbirlarni bajarish oldidan ma’lumotlarning sifatli va batafsil ekanligiga ishonch hosil qilish kerak hamda ularning ko‘plab QA/QS so‘rovlariga yaroqliligini nazorat qilish lozim.
+D. GAT-bu atrof muhit geografik ma’lumotlar bazasini o‘ziga hos tipi. GATning asosida dunyoni geografik aspektda ifodalovchi ma’lumotlar bazasi tarkibi yotadi
+ANSWER: A
+
+40. GAT tarmog‘iga nechta asosiy qurilish bloklari kiradi -  ?
+A. 3   ==== 2
+B. 1
+C. kirmaydi
+D. Yo‘q
+ANSWER: A
+
+41. …. - turli ko‘rsatkichlarni ko‘rsatilishi bo‘yicha keng tarqalgan uslublardan biri. Ularning yordamida izogips(topologik va gipsometrik) xaritalar shakillanadi, izotyerm, izobar xaritalar -  ?
+A. Chiziqlar uslubi   ==== Fizik uslubi
+B. Kartagrofiya uslubi
+C. Geoishlov uslubi
+D. Yo‘q
+ANSWER: A
+
+42. Aerofotosyomka kadri qancha formatdagi topografik aerofotoapparat yordamida olib boriladi.
+A. 23x23
+B. 23x25
+C. 24x24
+D. 25x25
+ANSWER: A
+
+43. Aerofotosyomka materiallarini fotogrammetrik qayta ishlash asosiy jarayonlarni o`z ichiga oladi?
+A. tayyo1rgarlik ishlari; aerofotosuratlarni skanerlash; fotogrammetrik loyiha tuzish;
+B. fototriangulyatsiya usuli bilan tanyach nuqtalar turini fotogrammetrik jipslashtirish; suratlarni ortotransformirlash uchun relefning raqamli modelini yaratish; suratlarni bir masshtabga keltirish va ortofotoplanlarni montaj qilish.
+C. tayyo1rgarlik ishlari; suratlarni ortotransformirlash uchun relefning raqamli modelini yaratish; suratlarni bir masshtabga keltirish va ortofotoplanlarni montaj qilish.
+D. aerofotosuratlarni skanerlash; fotogrammetrik loyiha tuzish;
+ANSWER: A
+
+44. Aerofototopografik	syomka	metodini	qo`llash	yordamida  yerlarni inventarizatsiyalash bo`yicha ishlar kompleksida raqamli kadastr kartalarini tuzish quyidagi texnologik jarayonlarni o`z ichiga oladi?
+A. tayyorgarlik ishlari; aerofotosyomka; planli-balandlik aerofotosyomka materiallarini tayyorlash, tayanch to`rni tuzish; aerofotosyomka materiallarini fotogrammetrik qayta ishlash; kameral karta tuzish ishlari.
+B. aerofotosyomka; planli-balandlik aerofotosyomka materiallarini tayyorlash, tayanch to`rni tuzish; aerofotosyomka materiallarini fotogrammetrik qayta ishlash; kameral karta tuzish ishlari.
+C. tayyorgarlik ishlari; aerofotosyomka; materiallarini tayyorlash, tayanch to`rni tuzish; aerofotosyomka materiallarini fotogrammetrik qayta ishlash; kameral karta tuzish ishlari.
+D. tayyo1rgarlik ishlari; aerofotosuratlarni skanerlash; fotogrammetrik loyiha tuzish;fototriangulyatsiya usuli bilan tanyach nuqtalar turini fotogrammetrik jipslashtirish; suratlarni ortotransformirlash uchun relefning raqamli modelini yaratish;
+ANSWER: A
+
+45. Tayyorgarlik ishlarining birinchi bosqichi o`z ichiga?
+A. ma`lumotlar bazasini (MB) yaratish; RIS – sxemalar tuzish; MGE loyihani tuzish.
+B. ma`lumotlar bazasini (MB) yaratish; RIS – sxemalar tuzish;
+C. shartli belgilar bibliotekasi; shriftlar bibliotekasi; chiziqlar shakli bibliotekasi; ranglar jadvali;sozlash fayllari.
+D. shartli belgilar bibliotekasi; shriftlar bibliotekasi;chiziqlar shakli bibliotekasi;
+ANSWER: A
+
+46. Tayyorgarlik ishlarining ikkinchi bosqichi o`z ichiga:
+A. ob’yektlar va atributlarning jadvallarini tuzish yoki loyihalash; varaq ramkasini tayyorlash va ramka chetlarini jihozlashni oladi.
+B. ma`lumotlar bazasini (MB) yaratish; RIS – sxemalar tuzish;
+C. ma`lumotlar bazasini (MB) yaratish; RIS – sxemalar tuzish; MGE loyihani tuzish.
+D. shartli belgilar bibliotekasi;  shriftlar bibliotekasi; chiziqlar shakli bibliotekasi;
+ANSWER: A
+
+47. Xaritani raqamli tarzga aylantirish jarayoni mobaynida taxririyatning imkoniyatlari chegaralgan. Hatolarni kamaytirish maksadida quyidagi  ishlarni bajarish lozim?
+A. Hamma bor chiziqlarni tutashtirilganini tekshirish  Hamma bor poligonlar yopilganini tekshirish
+B. ob’yektlar va atributlarning jadvallarini tuzish yoki loyihalash; varaq ramkasini tayyorlash va ramka chetlarini jihozlashni oladi.
+C. Operatorning hatolari; DiGATayzerda ishlash paytida noto`g’ri tanlangan parametrlari; Dasturlashning xususiy hatolari.
+D. shartli belgilar bibliotekasi;  shriftlar bibliotekasi; chiziqlar shakli bibliotekasi;
+ANSWER: A
+
+48. Hatolarning tabiati bir necha guruxga bo`linadi?
+A. Operatorning hatolari; DiGATayzerda ishlash paytida noto`g’ri tanlangan parametrlari; Dasturlashning xususiy hatolari.
+B. ob’yektlar va atributlarning jadvallarini tuzish yoki loyihalash; varaq ramkasini tayyorlash va ramka chetlarini jihozlashni oladi.
+C. poligonga rang berish printerdan chikarib manba` bilan solishtirsh hamma bor ezuvlarni poligonlarga va chiziqlarga mos kelishini tekshirish
+D. shartli belgilar bibliotekasi;  shriftlar bibliotekasi; chiziqlar shakli bibliotekasi;
+ANSWER: A
+
+49. Tajriba shuni ko`rsatadi, raqamli tarzga aylantirishda oddiy shartlarga ko`ra ish olib borilsa, hatolarni oldini olish mumkin, ya`ni?
+A. poligonga rang berish printerdan chikarib manba` bilan solishtirsh hamma bor ezuvlarni poligonlarga va chiziqlarga mos kelishini tekshirish
+B. ob’yektlar va atributlarning jadvallarini tuzish yoki loyihalash; vara ramkasini tayyorlash va ramka chetlarini jihozlashni oladi.
+C. Hamma bor chiziqlarni tutashtirilganini tekshirish  Hamma bor poligonlar yopilganini tekshirish
+D. shartli belgilar bibliotekasi;  shriftlar bibliotekasi; chiziqlar shakli bibliotekasi;
+ANSWER: A
+
+50. Fazoviy ma`lumotlarning aniqligini bildiradigan atamalar nechta:
+A. 8
+B. 7
+C. 6
+D. 2
+ANSWER: A
+
+51. Fazoviy ma`lumotlar bazalarning aniqligi?
+A. Ma`lumotlarning o`ziga xos aniqligi va ma`lumotlar bazaning aniqligini bir biridan ajratish lozim
+B. Fazoviy ma`lumotlar ko`pincha umumlashtirilgan va shu sababli ularning haqiqiy ko`rsatkichlarini aniqlash oson emas. Amaliyotda ko`zatilgan yoki o`lchangan ko`rsatkichlar haqiqiy deb faraz qilinadi.
+C. Hamma bor fazoviy ma`lumotlarining aniqligi geoinformasion tizimning imkoniyatlariga ko`ra pastrok turadi.
+D. Misol uchun, xaritada  ob’yektlar 0.5 mm aniqligi bilan ko`rsatiladi va joyda agar 1:25000 masshtabdagi xaritadan foydalanilgan bo`lsa bu 12,5 metrga to`g’ri keladi, agar 1:250000 masshtabdagi xaritadan foydalanilgan bo`lsa bu 125 metrga to`g’ri keladi.
+ANSWER: A
+
+52. Ma`lumotlar aniqligi ?
+A. hisoblangan ko`rsatkichlarining haqiqiy ko`rsatgichlarga yaqinligi.  Fazoviy ma`lumotlar ko`pincha umumlashtirilgan va shu sababli ularning haqiqiy ko`rsatkichlarini aniqlash oson emas. Amaliyotda ko`zatilgan yoki o`lchangan ko`rsatkichlar haqiqiy deb faraz qilinadi.
+B. Ma`lumotlarning o`ziga xos aniqligi va ma`lumotlar bazaning aniqligini bir biridan ajratish lozim
+C. Hamma bor fazoviy ma`lumotlarining aniqligi geoinformasion tizimning imkoniyatlariga ko`ra pastrok turadi.
+D. Misol uchun, xaritada  ob’yektlar 0.5 mm aniqligi bilan ko`rsatiladi va joyda agar 1:25000 masshtabdagi xaritadan foydalanilgan bo`lsa bu 12,5 metrga to`g’ri keladi, agar 1:250000 masshtabdagi xaritadan foydalanilgan bo`lsa bu 125 metrga to`g’ri keladi.
+ANSWER: A
+
+53. Joylashish aniqligi?
+A. ob’yekt joylashish to`g’risidagi axborotini haqiqiy koordinatalarga mosligini bildiradi. ko`zatilgan yoki o`lchangan ko`rsatkichlar haqiqiy deb faraz qilinadi.
+B. Ma`lumotlarning o`ziga xos aniqligi va ma`lumotlar bazaning aniqligini bir biridan ajratish lozim
+C. Hamma bor fazoviy ma`lumotlarining aniqligi geoinformasion tizimning imkoniyatlariga ko`ra pastrok turadi.
+D. hisoblangan ko`rsatkichlarining haqiqiy ko`rsatgichlarga yaqinligi.  Fazoviy ma`lumotlar ko`pincha umumlashtirilgan va shu sababli ularning haqiqiy ko`rsatkichlarini aniqlash oson emas. Amaliyotda
+ANSWER: A
+
+54. ArcCatalog  nima ?
+A. Mazkur ilova ArcGIS  ma’lumotlarni boshqarish uchun xizmat qiladi..   Haritalashtirish va tahrirlashga hamda haritalar bo‘yicha so‘rovnomalar va tahlillashtirishga doir barcha masalalarni yyechishga yo‘naltirilgan asosiy ilova.
+B. Hamma bor fazoviy ma`lumotlarining aniqligi geoinformasion tizimning imkoniyatlariga ko`ra pastrok turadi.
+C. ArcGIS foydalanuvchilari uchun instrumentlar, modellar va skriptlar to‘plamlariga kirish, ularni tashkillashtirish va boshqarishda interfeys vazifasini bajaradi.
+D. Yo‘q
+ANSWER: A
+
+55. ArcMap  nima ?
+A. Haritalashtirish va tahrirlashga hamda haritalar bo‘yicha so‘rovnomalar va tahlillashtirishga doir barcha masalalarni yyechishga yo‘naltirilgan asosiy ilova
+B. Mazkur ilova ArcGIS  ma’lumotlarni boshqarish uchun xizmat qiladi..
+C. Hamma bor fazoviy ma`lumotlarining aniqligi geoinformasion tizimning imkoniyatlariga ko`ra pastrok turadi.
+D. ArcGIS foydalanuvchilari uchun instrumentlar, modellar va skriptlar to‘plamlariga kirish, ularni tashkillashtirish va boshqarishda interfeys vazifasini bajaradi.
+ANSWER: A
+
+56. ArcToolBox  nima ?
+A. ArcGIS foydalanuvchilari uchun instrumentlar, modellar va skriptlar to‘plamlariga kirish, ularni tashkillashtirish va boshqarishda interfeys vazifasini bajaradi.
+B. Mazkur ilova ArcGIS  ma’lumotlarni boshqarish uchun xizmat qiladi..
+C. Hamma bor fazoviy ma`lumotlarining aniqligi geoinformasion tizimning imkoniyatlariga ko`ra pastrok turadi.
+D. Haritalashtirish va tahrirlashga hamda haritalar bo‘yicha so‘rovnomalar va tahlillashtirishga doir barcha masalalarni yyechishga yo‘naltirilgan asosiy ilova
+ANSWER: A
+
+57. «Sheyp fayl» kengaytmasi qanday bo’ladi?
+A. .shx,  .dbf va .shp
+B. shx
+C. dbf
+D. mxd
+ANSWER: A
+
+58. Fazoviy indekslar  kengaytmasi qanday bo’ladi?
+A. shx
+B. dbf
+C. shp
+D. mxd
+ANSWER: A
+
+59. atributiv jadvalar  kengaytmasi qanday bo’ladi?
+A. dbf
+B. shp
+C. mxd
+D. shx
+ANSWER: A
+
+60. grafik ob’yektlar kengaytmasi qanday bo’ladi?
+A. shp
+B. shx
+C. dbf
+D. mxd
+ANSWER: A
+
+61. Eng ko‘p ishlatiladigan instrumientlar panellari qaysilar?
+A. Tools, Standart
+B. Tools Editor
+C. Effect
+D. Editor Stadnart
+ANSWER: A
+
+62. Selections bo’limi bu - ?
+A. boshqa ob’yektlarni tanlashni amalga oshiruvchi
+B. Vack To Previous extent, Go To Next extent  Full ex.
+C. Ob’yekt haqidagi atributiv ma’lumotlarni ko‘rish  imkonini beruvchi Identify (aniqlash) instrument
+D. Vack To Previous extent, Go To Next extent  Full ex.
+ANSWER: A
+
+63. Zoom In, Zoom Out, Fixed Zoom In, Fixed Zoom Out   bo’limi bu - ?
+A. miqyos o‘zgartirish instrumentlari;
+B. Vack To Previous extent, Go To Next extent  Full ex.
+C. Ob’yekt haqidagi atributiv ma’lumotlarni ko‘rish  imkonini beruvchi Identify (aniqlash) instrument
+D. Vack To Previous extent, Go To Next extent  Full ex.
+ANSWER: A
+
+64. Zoom In, Zoom Out, Fixed Zoom In, Fixed Zoom Out   bo’limi bu - ?
+A. miqyos o‘zgartirish instrumentlari;
+B. Vack To Previous extent, Go To Next extent  Full ex.
+C. Ob’yekt haqidagi atributiv ma’lumotlarni ko‘rish  imkonini beruvchi Identify (aniqlash) instrument
+D. Vack To Previous extent, Go To Next extent  Full ex.
+ANSWER: A
+
+65. Vack To Previous extent, Go To Next extent  Full ex.
+A. intrumentlar bo’limi bu - ?
+B. Vack To Previous extent, Go To Next extent  Full ex.
+C. miqyos o‘zgartirish instrumentlari;
+D. Ob’yekt haqidagi atributiv ma’lumotlarni ko‘rish  imkonini beruvchi Identify (aniqlash) instrument
+ANSWER: B
+
+66. Find intrumentlar bo’limi bu - ?
+A. instrumenti ishga tushganda qidiruv oynasi
+B. miqyos o‘zgartirish instrumentlari;
+C. Ob’yekt haqidagi atributiv ma’lumotlarni ko‘rish  imkonini beruvchi Identify (aniqlash) instrument
+D. Vack To Previous extent, Go To Next extent  Full ex
+ANSWER: A
+
+67. Go To XY (XY nuqtaga o‘tish) - ?
+A. instrumenti kerakli ob’yektni bevosita koordinatlar asosida topish imkonini beradi.
+B. miqyos o‘zgartirish instrumentlari;
+C. instrumenti ishga tushganda qidiruv oynasi
+D. Vack To Previous extent, Go To Next extent  Full ex
+ANSWER: A
+
+68. Measure - ?
+A. Istrumenti yordamida o‘lchashni amalga oshirish uchun muloqot oynasi ochiladi
+B. instrumenti kerakli ob’yektni bevosita koordinatlar asosida topish imkonini beradi.
+C. instrumenti ishga tushganda qidiruv oynasi
+D. Vack To Previous extent, Go To Next extent  Full ex
+ANSWER: A
+
+69. Yuqoriga bitta darajada tugmasini vazifazi - ?
+A. Catalog daraxtida yuqoriga bitta daraja o‘tish
+B. Dikda (ishchi sohalarda) fayllarga ega papkalarda saqlanadigan ArcGIS hujjatlari va undagi mavjud narsalarga qo‘shilish.
+C. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+D. Ajratilgan element o‘chiriladi.
+ANSWER: A
+
+70. Papkaga qo‘shilish  tugmasini vazifazi - ?
+A. Dikda (ishchi sohalarda) fayllarga ega papkalarda saqlanadigan ArcGIS hujjatlari va undagi mavjud narsalarga qo‘shilish.
+B. Catalog daraxtida yuqoriga bitta daraja o‘tish
+C. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+D. Ajratilgan element o‘chiriladi.
+ANSWER: A
+
+71. Papkadan chiqib ketish tugmasini vazifazi - ?
+A. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+B. Catalog daraxtida yuqoriga bitta daraja o‘tish
+C. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+D. Ajratilgan element o‘chiriladi.
+ANSWER: A
+
+72. Nusha ko‘chirish tugmasini vazifazi - ?
+A. Ajratilgan element o‘chiriladi
+B. Catalog daraxtida yuqoriga bitta daraja o‘tish
+C. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+D. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+ANSWER: B
+
+73. Qo‘yish tugmasini vazifazi - ?
+A. Nusha ko‘chirilgan element ko‘rsatilgan joyga qo‘yiladi
+B. Catalog daraxtida yuqoriga bitta daraja o‘tish
+C. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+D. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+ANSWER: A
+
+74. O‘chirib tashlash. tugmasini vazifazi - ?
+A. Ajratilgan element o‘chiriladi.
+B. Ajratilgan elementdan nusha ko‘chiriladi.
+C. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+D. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+ANSWER: A
+
+75. Belgilar  tugmasini vazifazi - ?
+A. Yirik belgilar yordamida mundarija (contens) qo‘shimcha sahifasidagi elementlar ko‘rsatiladi.
+B. Ajratilgan elementdan nusha ko‘chiriladi.
+C. Ajratilgan element o‘chiriladi.
+D. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+ANSWER: A
+
+76. Ro‘yxat tugmasini vazifazi - ?
+A. Yirik belgilar yordamida mundarija (contens) qo‘shimcha sahifasidagi elementlar ko‘rsatiladi.
+B. Ajratilgan elementdan nusha ko‘chiriladi.
+C. Ajratilgan element o‘chiriladi.
+D. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+ANSWER: A
+
+77. Detallar tugmasini vazifazi - ?
+A. Ro‘yxat ko‘rinishida mundarija (contens) qo‘shimcha sahifasidagi elementlar ko‘rsatiladi..
+B. Yirik belgilar yordamida mundarija (contens) qo‘shimcha sahifasidagi elementlar ko‘rsatiladi
+C. Ajratilgan element o‘chiriladi.
+D. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+ANSWER: A
+
+78. ArcMap ni ishga tushurish  ugmasini vazifazi - ?
+A. ArcMap ning yangi seansi ishga tushadi.
+B. Yirik belgilar yordamida mundarija (contens) qo‘shimcha sahifasidagi elementlar ko‘rsatiladi
+C. Ajratilgan element o‘chiriladi.
+D. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+ANSWER: A
+
+79. Preview  tugmasini vazifazi - ?
+A. ishlash uchun ko‘rish
+B. Yirik belgilar yordamida mundarija (contens) qo‘shimcha sahifasidagi elementlar ko‘rsatiladi
+C. Ajratilgan element o‘chiriladi.
+D. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+ANSWER: A
+
+80. Geography tugmasini vazifazi - ?
+A. geografiya instrumentlar paneli yordamida tasvirni siljitishi va turli tuman miqyoslanishi mumkin
+B. ishlash uchun ko‘rish
+C. Ajratilgan element o‘chiriladi.
+D. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+ANSWER: A
+
+81. Create Thumbnauil tugmasini vazifazi - ?
+A. Tasvirlarni yaratish uchun namuna yaratish va ob’yektlarni idendifikatsiya qilish ham mumkin
+B. ishlash uchun ko‘rish
+C. Ajratilgan element o‘chiriladi.
+D. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+ANSWER: A
+
+82. Location  tugmasini vazifazi - ?
+A. Joylashuv instrumentlar paneli
+B. Tasvirlarni yaratish uchun namuna yaratish va ob’yektlarni idendifikatsiya qilish ham mumkin
+C. Ajratilgan element o‘chiriladi.
+D. Catalog daraxtidagi papkaga tanlab jo‘natilganlar o‘chiriladi lekin bunda o‘zi va uning tarkibiy qismi o‘chirilmaydi.
+ANSWER: A
+
+83. Maydonli qatlamga - ?
+A. Polygon Features
+B. Point Features
+C. Line Features
+D. Annotation Features
+ANSWER: A
+
+84. chiziqli qatlamga - ?
+A. Line Features
+B. Point Features
+C. Polygon Features
+D. Annotation Features
+ANSWER: A
+
+85. nuqtali qatlamga -?
+A. Point Features
+B. Line Features
+C. Polygon Features
+D. Annotation Features
+ANSWER: A
+
+86. yozuvli qatlamga  -?
+A. Annotation Features
+B. Line Features
+C. Polygon Features
+D. Point Features
+ANSWER: A
+
+87. … - Sinflar ma’lumotlarini tabiiy guruhlash asosida hosil qilinadi. ArcMap yordamida sinflar orasidagi chegaralarni o‘xshash qiymatlar va sinflar orasidagi farqlarning maksimal bo‘lishi shartlari asosida topiladi?
+A. Tabiiy chegaralar
+B. O‘rta kvadratik chetlanish
+C. Teng oraliqlar
+D. Kvantil
+ANSWER: A
+
+88. … - Har bir sinf bir xil ob’yektlardan tashkil topadi. Bunday klassifikatsiya chiziqli taqsimlangan ma’lumotlar uchun mos keladi?
+A. Kvantil
+B. Tabiiy chegaralar
+C. Teng oraliqlar
+D. O‘rta kvadratik chetlanish
+ANSWER: A
+
+89. … - Bunda atributlar qiymatlari diapazoni oraliqlar soniga mos ravishda teng oraliqlarga bo‘linadi va oraliqlar qiymatlari beriladi. Ana shu intervallar orasida ArcMap avtomatik tarzda sinflar sonini aniqlaydi?
+A. Teng oraliqlar
+B. Tabiiy chegaralar
+C. O‘rta kvadratik chetlanish
+D. Kvantil
+ANSWER: A
+
+90. … - Sinflashtirishning bu usuli atribut qiymatining uning o‘rtacha qiymatidan chetlanishni ko‘rsatadi. ArcMap atributning o‘rtacha qiymatini va o‘rtacha qiymatdan o‘rta kvadratik chetlanishini hisoblaydi va ana shu qiymatlar asosida sinflar chegaralari aniqlanadi?
+A. O‘rta kvadratik chetlanish
+B. Tabiiy chegaralar
+C. Teng oraliqlar
+D. Kvantil
+ANSWER: A
+
+91. … ArcGIS ning rastrli ma’lumotlarni chiziqli va poligonal vektorli ob’yektlarga geoma’lumotlar bazasi yoki sheyp fayl formatida shakllantirish uchun ishlab chiqilgan qo‘shimcha modulidir?
+A. ArcScan
+B. Tabiiy chegaralar
+C. Teng oraliqlar
+D. GMB
+ANSWER: A
+
+92. … ArcGIS ning rastrli ma’lumotlarni chiziqli va poligonal vektorli ob’yektlarga geoma’lumotlar bazasi yoki sheyp fayl formatida shakllantirish uchun ishlab chiqilgan qo‘shimcha modulidir.?
+A. ArcScan
+B. Tabiiy chegaralar
+C. Teng oraliqlar
+D. GMB
+ANSWER: A
+
+93. ArcMap  menyusida CTRL+N klavishlar kombinatsiyasi  qanday vazifani bajaradi ?
+A. Yangi yaratish
+B. Bekor qilish (Undo)
+C. Teng oraliqlar
+D. Qirqish (Cut)
+ANSWER: A
+
+94. ArcMap  menyusida CTRL+O klavishlar kombinatsiyasi  qanday vazifani bajaradi ?
+A. Ochish
+B. Bekor qilish (Undo)
+C. Teng oraliqlar
+D. Qirqish (Cut)
+ANSWER: A
+
+95. ArcMap  menyusida CTRL+S klavishlar kombinatsiyasi  qanday vazifani bajaradi ?
+A. Saqalsh (Save)
+B. Bekor qilish (Undo)
+C. Teng oraliqlar
+D. Qirqish (Cut)
+ANSWER: A
+
+96. ArcMap  menyusida CTRL+Z klavishlar kombinatsiyasi  qanday vazifani bajaradi ?
+A. Bekor qilish (Undo)
+B. Saqalsh (Save)
+C. Teng oraliqlar
+D. Qirqish (Cut)
+ANSWER: A
+
+97. ArcMap  menyusida ALT+F4 klavishlar kombinatsiyasi  qanday vazifani bajaradi ?
+A. Chiqish
+B. Saqalsh (Save)
+C. Teng oraliqlar
+D. Qirqish (Cut)
+ANSWER: A
+
+98. ArcMap  menyusida CTRL+Y klavishlar kombinatsiyasi  qanday vazifani bajaradi ?
+A. Takrorlash
+B. Saqalsh (Save)
+C. Teng oraliqlar
+D. Qirqish (Cut)
+ANSWER: A
+
+99. ArcMap  menyusida CTRL+X klavishlar kombinatsiyasi  qanday vazifani bajaradi ?
+A. Qirqish (Cut)
+B. Saqalsh (Save)
+C. Teng oraliqlar
+D. Qirqish (Cut)
+ANSWER: A
+
+100. ArcMap  menyusida CTRL+C klavishlar kombinatsiyasi  qanday vazifani bajaradi ?
+A. Nushalash (Copy)
+B. Saqalsh (Save)
+C. Teng oraliqlar
+D. Qirqish (Cut)
+ANSWER: A
+
+101. ArcMap  menyusida CTRL+V klavishlar kombinatsiyasi  qanday vazifani bajaradi ?
+A. Qo‘yish (Paste)
+B. Saqalsh (Save)
+C. Nushalash (Copy)
+D. Qirqish (Cut)
+ANSWER: A
+
+102. ArcMap  menyusida DELETE klavishlar kombinatsiyasi  qanday vazifani bajaradi ?
+A. O‘chirish
+B. Saqalsh (Save)
+C. Nushalash (Copy)
+D. Qirqish (Cut)
+ANSWER: A
+
+103. ArcMap  menyusida F1 klavishlar kombinatsiyasi  qanday vazifani bajaradi ?
+A. ArcGISfor DeskTop
+B. Saqalsh (Save)
+C. Nushalash (Copy)
+D. Qirqish (Cut)
+ANSWER: A
+
+104. Maslan, agar 0 dan 300 gacha bo‘lgan diapazondagi ifodalarga ega maydon uchun uchta sinf so‘ralsa, ArcGIS 0-100, qanday diapason yaratiladi?
+A. ArcGIS 0-100, 100-200 va 200-300
+B. ArcGIS 0-100, 100-300 va 300-400
+C. ArcGIS 100-200 va 200-300
+D. ArcGIS 0-100 va 200-300
+ANSWER: A
+
+105. Maslan, agar 0 dan 300 gacha bo‘lgan diapazondagi ifodalarga ega maydon uchun uchta sinf so‘ralsa, ArcGIS 0-100, qanday diapason yaratiladi?
+A. ArcGIS 0-100, 100-200 va 200-300
+B. ArcGIS 0-100, 100-300 va 300-400
+C. ArcGIS 100-200 va 200-300
+D. ArcGIS 0-100 va 200-300
+ANSWER: A
+
+106. Haritani chop etish yoki nashr etish?
+A. Ma’lumotlar bazasida shakllantirilgan mavzuli qatlamlarni boshqa format birligiga eksport qilish
+B. Harita elementlarini (masalan, miqyosli chiziqlar) qo‘shishda o‘zgarishlar darhol haritada aks etadi
+C. Komponovka ko‘rinishi rejimida qo‘yish (insert) menyusi orqali harita elementlarini qo‘shing.
+D. Birinchi navbatda komponovka sahifalari o‘lchamlarini sozlanadi;
+ANSWER: A
+
+107. ArcGIS for Dekstop AutoCAD va Microstation asosidagi ilovalarda yaratilgan ma’lumotlarni qabul qiladimi
+A. Ha qiladi
+B. Yo’q qabul qilmaydi
+C. Aniqmas
+D. T.J.Y
+ANSWER: A
+
+108. 3D modellarni yarim avtomatik yaratish?
+A. Ushbu uslub ob’yekt modellarini ishlab chiqarishning to‘liq avtomatik jarayonining zaif tomonlarini bartaraf etadi.
+B. Past sifatli tuzilmali sirt to‘qimalari, avtomat ravishda yaratilgan to‘qimalar jarayon yoki binoning javonlari ustida yasalgan begona narsalar qoladi.
+C. Biror jarayon yoki binolarning uch o‘lchamli modelini yaratish, tom konturining xarakterli nuqtalarini o‘lchaydigan operatordan iborat.
+D. T.J.Y
+ANSWER: A
+
+109. ALT ob’yektlari ma’lumotlarining hamma to‘plamlari quyidagi komponovkalaridan qaysilarini qo‘llmaaydi?
+A. Hammasi qo’llab quvvatlaydi
+B. Kenglik bo‘yicha bog‘lash haqidagi axborot (qo‘shimcha tarzda);
+C. GAT metama’lumotlari (qo‘shimcha tarzda).
+D. Atribut jadvallariga ega ob’yektlarning sinflari;
+ANSWER: A
+
+110. 2000 yil 11-fevralda fazoga uchirilgan fazo kemasiga qanday missiya berilgan edi ?
+A. yer yuzasi balandliklarini tasvirlash missiyasi
+B. yer yuzasi dengizlarini tasvirlash missiyasi
+C. yer yuzasi tog’larni tasvirlash missiyasi
+D. yer yuzasi qiyaliklarni tasvirlash missiyasi
+ANSWER: A
+
+111. 2000 yil 11-fevralda fazoga uchirilgan fazo kemasi qayerdi suratka olgan?
+A. 600 shimoliy va janubiy kengliklardagi yer yuzasining dengiz sathidan balandliklarini
+B. 600 shimoliy kengliklardagi yer yuzasining dengiz sathidan balandliklarini
+C. 600 shimoliy va janubiy kengliklardagi yer yuzasining dengiz sathidan uncha baland bo’lmagan balandliklarini
+D. 450 shimoliy va janubiy kengliklardagi yer yuzasining dengiz sathidan balandliklarini
+ANSWER: A
+
+112. Aylantirish - ?
+A. masalan, x, y koordinata jadvalidan nuqta shakliga o'xshash tarzda, bitta formatdan boshqasiga o'zgartirish jarayoni.
+B. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+C. berilgan nuqtaning balandlik koordinatasini dengiz sathiga nisbatan o’lchashda qo’llaniladi.
+D. Yer yuzining shaklini aniqlashga yordam beradigan ArcGlobe ilovasidagi qatlam.
+ANSWER: A
+
+113. Balandlik ma'lumotlari - ?
+A. Berilgan nuqtaning balandlik koordinatasini dengiz sathiga nisbatan o’lchashda qo’llaniladi.
+B. Kiritilgan ma'lumotlarini rastrdan vektorga yoki bitta fayl formatidan ikkinchisiga, masalan, x, y koordinata jadvalidan nuqta shakliga o'xshash tarzda, bitta formatdan boshqasiga o'zgartirish jarayoni.
+C. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+D. Dasturiy ta'minotni ro'yxatga olish jarayonini tugallash. Bir martali ishlatiladigan yoki server mahsuloti, yoki kengaytmalari o'rnatilgan va ro'yxatga olingan va tegishli ro'yxatga olish orqali avtorizatsiya qilingan fayl yaratish va dasturiy ta'minotga yuborish.
+ANSWER: A
+
+114. ArcToolbox  - ?
+A. Geoqaytaishlash qurollar panelini o’zida mujassam etgan maxsus ilova
+B. Kiritilgan ma'lumotlarini rastrdan vektorga yoki bitta fayl formatidan ikkinchisiga, masalan, x, y koordinata jadvalidan nuqta shakliga o'xshash tarzda, bitta formatdan boshqasiga o'zgartirish jarayoni.
+C. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+D. Dasturiy ta'minotni ro'yxatga olish jarayonini tugallash. Bir martali ishlatiladigan yoki server mahsuloti, yoki kengaytmalari o'rnatilgan va ro'yxatga olingan va tegishli ro'yxatga olish orqali avtorizatsiya qilingan fayl yaratish va dasturiy ta'minotga yuborish.
+ANSWER: A
+
+115. Argumentlashgan reallik- ?
+A. Foydalanuvchilar real olamni to‘liq ko‘rib turgan holda kompyuterda yig‘ilgan ma’lumotlarni real olamdagi ma’lumotlar bilan ustma-ust qo‘yish yoki birlashtirish jarayoni.
+B. Bu GAT loyihalari uchun bevosita to'g'ridan to'g'ri to’plangan raqamli formatdagi ma’lumotlardir.
+C. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+D. Dasturiy ta'minotni ro'yxatga olish jarayonini tugallash. Bir martali ishlatiladigan yoki server mahsuloti, yoki kengaytmalari o'rnatilgan va ro'yxatga olingan va tegishli ro'yxatga olish orqali avtorizatsiya qilingan fayl yaratish va dasturiy ta'minotga yuborish.
+ANSWER: A
+
+116. Asosiy ma’lumotlar manbaasi - ?
+A. Bu GAT loyihalari uchun bevosita to'g'ridan to'g'ri to’plangan raqamli formatdagi ma’lumotlardir. Foydalanuvchilar real olamni to‘liq ko‘rib turgan holda kompyuterda yig‘ilgan ma’lumotlarni real olamdagi ma’lumotlar bilan ustma-ust qo‘yish yoki birlashtirish jarayoni.
+B. Foydalanuvchilar real olamni to‘liq ko‘rib turgan holda kompyuterda yig‘ilgan ma’lumotlarni real olamdagi ma’lumotlar bilan ustma-ust qo‘yish yoki birlashtirish jarayoni.
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Dasturiy ta'minotni ro'yxatga olish jarayonini tugallash. Bir martali ishlatiladigan yoki server mahsuloti, yoki kengaytmalari o'rnatilgan va ro'yxatga olingan va tegishli ro'yxatga olish orqali avtorizatsiya qilingan fayl yaratish va dasturiy ta'minotga yuborish.
+ANSWER: A
+
+117. Asosiy xarita - ?
+A. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlarr.
+B. Foydalanuvchilar real olamni to‘liq ko‘rib turgan holda kompyuterda yig‘ilgan ma’lumotlarni real olamdagi ma’lumotlar bilan ustma-ust qo‘yish yoki birlashtirish jarayoni.
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Dasturiy ta'minotni ro'yxatga olish jarayonini tugallash. Bir martali ishlatiladigan yoki server mahsuloti, yoki kengaytmalari o'rnatilgan va ro'yxatga olingan va tegishli ro'yxatga olish orqali avtorizatsiya qilingan fayl yaratish va dasturiy ta'minotga yuborish.
+ANSWER: A
+
+118. Atribut -?
+A. Vektor ob’ektlarni tavsiflaydigan ma’lumot
+B. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlarr
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Dasturiy ta'minotni ro'yxatga olish jarayonini tugallash. Bir martali ishlatiladigan yoki server mahsuloti, yoki kengaytmalari o'rnatilgan va ro'yxatga olingan va tegishli ro'yxatga olish orqali avtorizatsiya qilingan fayl yaratish va dasturiy ta'minotga yuborish.
+ANSWER: A
+
+119. Autentifikatsiya - ?
+A. Obyektning e’lon qilingan bir xilligini tekshirish jarayoni
+B. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlarr
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Vektor ob’ektlarni tavsiflaydigan ma’lumot
+ANSWER: A
+
+120. Avtomatik generalizatsiya - ?
+A. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+B. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlarr
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Dasturiy ta'minotni ro'yxatga olish jarayonini tugallash. Bir martali ishlatiladigan yoki server mahsuloti, yoki kengaytmalari o'rnatilgan va ro'yxatga olingan va tegishli ro'yxatga olish orqali avtorizatsiya
+ANSWER: A
+
+121. Avtorizatsiya - ?
+A. Dasturiy ta'minotni ro'yxatga olish jarayonini tugallash. Bir martali ishlatiladigan yoki server mahsuloti, yoki kengaytmalari o'rnatilgan va ro'yxatga olingan va tegishli ro'yxatga olish orqali avtorizatsiya
+B. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlarr
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+122. Blok attribut - ?
+A. CAD da bitta ob'ektni shakllantirish uchun biriktirilishi mumkin bo'lgan ob'ektlar to'plami.
+B. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlarr
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+123. Bloklash-?
+A. ESRI dasturlari, ArcGIS-da, geocodlash indeksi jarayonini tekshirilishi kerak bo'lgan potentsial o'yinlarning sonini kamaytirish yoki tekshirish..
+B. CAD da bitta ob'ektni shakllantirish uchun biriktirilishi mumkin bo'lgan ob'ektlar to'plami
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+124. buyruq satri?
+A. Interfeys buyrug'ida terilib ishlaydigan matnli satr.
+B. CAD da bitta ob'ektni shakllantirish uchun biriktirilishi mumkin bo'lgan ob'ektlar to'plami
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+125. Chiqish katalogi ?
+A. ESRI dasturlari. ArcIMS-da, fayllarni brauzerda nko'rsatish uchun foydalanuvchilarga taqdim qiladigan va saqlab turadigan, belgilangan fayllar katalogi.
+B. Modellashtirish. Kompyuter, dastur yoki ishning natijasi bo'lgan ma'lumotlar.
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+126. Chiqish ma'lumotlar?
+A. Modellashtirish. Kompyuter, dastur yoki ishning natijasi bo'lgan ma'lumotlar.
+B. ESRI dasturlari. ArcIMS-da, fayllarni brauzerda nko'rsatish uchun foydalanuvchilarga taqdim qiladigan va saqlab turadigan, belgilangan fayllar katalogi.
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+127. Chiziqli koordinatalar sistemalari?
+A. O’lchangan chiziqli fazoviy ob’ektlarning geografik joylashishiga nisbatan geografik ma’lumotlarni saqlash usuli.
+B. ESRI dasturlari. ArcIMS-da, fayllarni brauzerda nko'rsatish uchun foydalanuvchilarga taqdim qiladigan va saqlab turadigan, belgilangan fayllar katalogi.
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+128. Chiziqli koordinatalar sistemalari?
+A. O’lchangan chiziqli fazoviy ob’ektlarning geografik joylashishiga nisbatan geografik ma’lumotlarni saqlash usuli.
+B. ESRI dasturlari. ArcIMS-da, fayllarni brauzerda nko'rsatish uchun foydalanuvchilarga taqdim qiladigan va saqlab turadigan, belgilangan fayllar katalogi.
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+129. Chop etish?
+A. Bunda foydalanuvchi turli uslublar orqali foydalanuvchi metamalumotlarni chop etishi mumkin bo’ladi.
+B. ESRI dasturlari. ArcIMS-da, fayllarni brauzerda nko'rsatish uchun foydalanuvchilarga taqdim qiladigan va saqlab turadigan, belgilangan fayllar katalogi.
+C. GAT loyihalari uchun bevosita va to'g'ridan to'g'ri toʻplangan raqamli formatdagi ma’lumotlar.
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+130. CMYK ?
+A. Ranglar modeli. Turli ranglarni birlashtirib, rang hosil qilish uchun ishlatiladi.
+B. ESRI dasturlari. ArcIMS-da, fayllarni brauzerda nko'rsatish uchun foydalanuvchilarga taqdim qiladigan va saqlab turadigan, belgilangan fayllar katalogi.
+C. Bunda foydalanuvchi turli uslublar orqali foydalanuvchi metamalumotlarni chop etishi mumkin bo’ladi.
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+131. Daraxt (shajara) tarzli sxema?
+A. Bu ketma-ketlikda biriktirilgan sinflar juftining atributiv masofada ko‘rsatiladigan sxema. Kesishish chiziqlaridan qochish uchun sxemada grafik tarzida qo‘shilgan har bir juftlarni qo‘shni qilib ko‘rsatish lozim. Daraxt tarzli sxema ierarxiyali klasterlashtirish algoritmlarida qo‘llaniladi.
+B. ESRI dasturlari. ArcIMS-da, fayllarni brauzerda nko'rsatish uchun foydalanuvchilarga taqdim qiladigan va saqlab turadigan, belgilangan fayllar katalogi.
+C. Bunda foydalanuvchi turli uslublar orqali foydalanuvchi metamalumotlarni chop etishi mumkin bo’ladi.
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+132. DBF fayli?
+A. Ma'lumotlar bazasi fayl formati. qo‘llaniladi
+B. ESRI dasturlari. ArcIMS-da, fayllarni brauzerda nko'rsatish uchun foydalanuvchilarga taqdim qiladigan va saqlab turadigan, belgilangan fayllar katalogi.
+C. Bu ketma-ketlikda biriktirilgan sinflar juftining atributiv masofada ko‘rsatiladigan sxema. Kesishish chiziqlaridan qochish uchun sxemada grafik tarzida qo‘shilgan har bir juftlarni qo‘shni qilib ko‘rsatish lozim. Daraxt tarzli sxema ierarxiyali klasterlashtirish algoritmlarida
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+133. DEFAULTS?
+A. Ushbu kalit so‘zi tarkibiga aksariyat umumiy Shakl sozlamalarini va ko‘pchilik foydalaniladigan geomaʼlumotlar bazalari uchun saqlash parametrlarini oladi.
+B. ESRI dasturlari. ArcIMS-da, fayllarni brauzerda nko'rsatish uchun foydalanuvchilarga taqdim qiladigan va saqlab turadigan, belgilangan fayllar katalogi.
+C. Bu ketma-ketlikda biriktirilgan sinflar juftining atributiv masofada ko‘rsatiladigan sxema. Kesishish chiziqlaridan qochish uchun sxemada grafik tarzida qo‘shilgan har bir juftlarni qo‘shni qilib ko‘rsatish lozim. Daraxt tarzli sxema ierarxiyali klasterlashtirish algoritmlarida
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+134. DiGATal terrain elevation data?
+A. Fazoviy obyektlar relyeflarining uch oʻlchamli koʻrinishi balandlik belgilari, chuqurlik belgilari, koordinatalari, gorizontallar va konturlarning yigʻindisi hisobga olinib aks ettirilgan model.
+B. ESRI dasturlari. ArcIMS-da, fayllarni brauzerda nko'rsatish uchun foydalanuvchilarga taqdim qiladigan va saqlab turadigan, belgilangan fayllar katalogi.
+C. Ushbu kalit so‘zi tarkibiga aksariyat umumiy Shakl sozlamalarini va ko‘pchilik foydalaniladigan geomaʼlumotlar bazalari uchun saqlash parametrlarini oladi.
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+135. DiGATayzer?
+A. Nuqtali va chiziqli ob’ektlarni koordinatalar bo’yicha kompyuter xotirasiga kiritishga moslashgan
+B. Ma’lumotlarni kompyuterga diGATayzer yordamida kiritish jarayoni.
+C. Ushbu kalit so‘zi tarkibiga aksariyat umumiy Shakl sozlamalarini va ko‘pchilik foydalaniladigan geomaʼlumotlar bazalari uchun saqlash parametrlarini oladi.
+D. Raster ma'lumotlaridan vektor ma'lumotlarini aniq yoki bir xil qiymatdagi piksellarni avtomatlashtirilgan usulda yaratish.
+ANSWER: A
+
+136. DPI?
+A. Bir dyuymga to’g’ri keladigan nuqtalar soni.
+B. Ma’lumotlarni kompyuterga diGATayzer yordamida kiritish jarayoni.
+C. Ushbu kalit so‘zi tarkibiga aksariyat umumiy Shakl sozlamalarini va ko‘pchilik foydalaniladigan geomaʼlumotlar bazalari uchun saqlash parametrlarini oladi.
+D. Kuzatuvchining fazo bo‘ylab harakatlanishi va harakatlanish davomida turli displey parametrlarini o‘zgartirish imkoniyatini yaratib beruvchi vizuallashtirish
+ANSWER: A
+
+137. EMF?
+A. Kengaytirilgan metafile uchun qisqartma.
+B. Ma’lumotlarni kompyuterga diGATayzer yordamida kiritish jarayoni.
+C. Bir dyuymga to’g’ri keladigan nuqtalar soni.
+D. Kuzatuvchining fazo bo‘ylab harakatlanishi va harakatlanish davomida turli displey parametrlarini o‘zgartirish imkoniyatini yaratib beruvchi vizuallashtirish
+ANSWER: A
+
+138. EOBrowser?
+A. ArcGIS yordamchi dasturi. Ob'ekt va'lumotlarining mazmunini tekshirish uchun ishlatililadi.
+B. Ma’lumotlarni kompyuterga diGATayzer yordamida kiritish jarayoni.
+C. Bir dyuymga to’g’ri keladigan nuqtalar soni.
+D. Kuzatuvchining fazo bo‘ylab harakatlanishi va harakatlanish davomida turli displey parametrlarini o‘zgartirish imkoniyatini yaratib beruvchi vizuallashtirish
+ANSWER: A
+
+139. faol ma'lumotlar chegarasi?
+A. Hozirda ishlaydigan ma'lumotlar bazasi - masalan, qatlamlar qo'shiladigan ma'lumotlar chegarasi. Faol ma'lumotlar chegarasi xaritada ko'rsatilgan va uning nomi tarkibiy qismidagi qalin matnda ko'rsatish.
+B. Fayl yoki ma'lumotlar bazasining hajmini kamaytirish jarayoni. Ma'lumotlar hajmini kamaytirib saqlash va ma'lumotlar bazasi bilan ishlashini yaxshilash..
+C. Bir dyuymga to’g’ri keladigan nuqtalar soni.
+D. Kuzatuvchining fazo bo‘ylab harakatlanishi va harakatlanish davomida turli displey parametrlarini o‘zgartirish imkoniyatini yaratib beruvchi vizuallashtirish
+ANSWER: A
+
+140. Gеoaxborot tizim-?
+A. bu gеografik ma’lumotlarni yig‘ish, kiritish, saqlash, matеmatik-kartografik modеllashtirish uchun mo‘ljallangan tеxnikaviy dasturiy vositalar va algoritmik amallar majmuasidir.
+B. bu gеografik ma’lumotlarni yig‘ish, kiritish, saqlash
+C. matеmatik-kartografik modеllashtirish uchun mo‘ljallangan tеxnikaviy dasturiy vositalar
+D. algoritmik amallar majmuasidir.
+ANSWER: A
+
+141. Geoinformatsiya tizimlari rivojlanish tarixi  nechta davrga bo‘linadi ?
+A. 4
+B. 6
+C. 5
+D. 3
+ANSWER: A
+
+142. Dastlabki davr?
+A. 1950 yillar oxiri va 1970 yillar boshlari
+B. 1948
+C. 1950 yillar oxiri
+D. 1970 yillar boshlari
+ANSWER: A
+
+143. Tadbirkorlik rivojlanish davri?
+A. 1980 yillarning boshlari
+B. 1948
+C. 1950 yillar oxiri
+D. 1961
+ANSWER: A
+
+144. Foydalanuvchilik davri?
+A. 1980 yillarning oxiri va xozirgi davr
+B. 1975
+C. 1978
+D. 1950 yillar oxiri
+ANSWER: A
+
+145. Davlatlar tashabbuslari davri?
+A. 1970 yillar boshlari -1980 yillar boshlari
+B. 1950 yillar oxiri va 1970 yillar boshlari
+C. 1980 yillarning boshlari va xozirgi davr
+D. 1980 yillarning oxiri va xozirgi davr
+ANSWER: A
+
+146. Geoinformatika va GAT lar paydo bo‘lishidagi dastlabki muvaffaqiyatli qadam?
+A. Kanada Geografik Axborot Tizimi(Canada Geographic Information System, CGAT) ning yaratilishini keltirish mumkin
+B. Xaritalar vujudga kelishi
+C. Fazoviy xaritalar
+D. Barcha javoblar to’g’ri
+ANSWER: A
+
+147. Kanada Geografik Axborot Tizimi(Canada Geographic Information System, CGAT) o’z faoliyatini qachon boshlagan?
+A. 1960
+B. 1958
+C. 1965
+D. 1971
+ANSWER: A
+
+148. Kanada GAT ining paydo bo‘lishi va rivojlanishida kimning rahbarligida ishlab chiqilgan ko‘plab konseptual va texnologik yechimlar asos bo‘lib xizmat qildi?
+A. Rodjyer Tomlinson (Rogyer Tomlinson)
+B. U.Garrison
+C. T.Xagyerstrand
+D. G.Makkarti
+ANSWER: A
+
+149. GAT larining rivojlanishiga qaysi olimlar katta hissa qo’shgan?
+A. Massachuset texnologiya institutining Garvard kompyutyer grafikasi va fazoviy tahlil laboratoriyasi ( Harvard Laboratory for Computyer Graphics & Spatial Analysis) olimlari
+B. Kanada olimlari
+C. O’rta Osiyo olimlari
+D. Barcha javoblar to’g’ri
+ANSWER: A
+
+150. Massachuset texnologiya institutining Garvard kompyutyer grafikasi va fazoviy tahlil laboratoriyasi qachon tashkil topgan?
+A. 1960-yillarning o‘rtalarida
+B. 1955-yil boshida
+C. 1962
+D. 1971-yil o’rtalarida
+ANSWER: A
+
+151. Massachuset texnologiya institutining Garvard kompyutyer grafikasi va fazoviy tahlil laboratoriyasi kim tomonidan tashkil etilgan?
+A. Howard Fishyer
+B. Rogyer Tomlinson
+C. T.Xagyerstrand
+D. G.Makkarti
+ANSWER: A
+
+152. Map Analysis Package - MAP, PMAP, aMAP kim tomonidan  ishlab chiqildi.?
+A. Dana Tomlin
+B. Rogyer Tomlinson
+C. Howard Fishyer
+D. Barcha javoblar to’g’ri
+ANSWER: A
+
+153. Internet tarmog‘i orqali yerkin foydalanilayotgan OSU-MAP dasturi qayerda  yaratilgan. ?
+A. Garvard laboratoriyasida etishib chiqqan mutaxassislar tomonidan Ogayo shtati Universitetida yaratilgan.
+B. Massachuset texnologiya instituti
+C. Oxford universitedida
+D. Barcha javoblar to’g’ri
+ANSWER: A
+
+154. Garvard laboratoriyasining keng qo‘llanilayotgan dasturiy maxsulotlari nechta?
+A. 4
+B. 6
+C. 3
+D. 7
+ANSWER: A
+
+155. SYMAP-bu?
+A. ko‘pmaqsadli xaritalashtirish tizimi
+B. kartografik tasvirni plottyerga chiqarish dasturi
+C. istiqbolli (uch o‘lchovli) tasvirlarni ko‘rish
+D. mashxur ARC/INFO o‘tmishdoshi
+ANSWER: A
+
+156. CALFORM-bu?
+A. kartografik tasvirni plottyerga chiqarish dasturi
+B. istiqbolli (uch o‘lchovli) tasvirlarni ko‘rish
+C. mashxur ARC/INFO o‘tmishdoshi
+D. ko‘pmaqsadli xaritalashtirish tizimi
+ANSWER: A
+
+157. SYMVU-bu?
+A. istiqbolli (uch o‘lchovli) tasvirlarni ko‘rish
+B. mashxur ARC/INFO o‘tmishdoshi
+C. ko‘pmaqsadli xaritalashtirish tizimi
+D. kartografik tasvirni plottyerga chiqarish dasturi
+ANSWER: A
+
+158. ODYSSEY-bu?
+A. mashxur ARC/INFO o‘tmishdoshi
+B. ko‘pmaqsadli xaritalashtirish tizimi
+C. kartografik tasvirni plottyerga chiqarish dasturi
+D. istiqbolli (uch o‘lchovli) tasvirlarni ko‘rish
+ANSWER: A
+
+159. 1960-yillar oxirida Qayerda Axolini Ro‘yxatga Olish(US Census Data) tizimiga GAT – texnologiyalarini qo‘llash xaqidagi fikrga kelindi?
+A. AQSH da
+B. Kanada da
+C. Brazilyada
+D. Ispaniyada
+ANSWER: A
+
+160. Qachon birinchi marta “ro‘yxatga olishning geografik lokallashtirilgan yili” deb e’lon qilindi?
+A. 1970-yil
+B. 1965
+C. 1972
+D. 1958
+ANSWER: A
+
+161. kartografik ma’lumotlar uchun Qanday format ishlab chiqildi?
+A. maxsus DIME (Dual Independent Map Encoding) formati
+B. 3d format
+C. 2d format
+D. Hech qanday format
+ANSWER: A
+
+162. Kartografik ma’lumotlarga ishlov berish va ifodalash algoritmlari Kanada GATi Garvard laboratoriyasi ishlab chiquvchilaridan olingan bo‘lib,  ular asosida qanday dastur ishlab chiqilgan
+A. POLYVRT dasturi
+B. Altree dasturi
+C. Shtent Dasturi
+D. barcha javoblar to’g’ri
+ANSWER: A
+
+163. Qachon mashhur ARC/INFO ishlab chiqildi?
+A. 1980-yillar boshida
+B. 950-yil boshida
+C. 1970-yil o’rtalarida
+D. Yo‘q
+ANSWER: A
+
+164. Xozirda GAT uchun apparat-dasturiy vositalar ishlab chiqaruvchi qaysi tijorat kompaniyasi keng tarqalgan?
+A. Intyergraph,Corp
+B. Paratiment
+C. C.Soldashion
+D. D.Aremount
+ANSWER: A
+
+165. Xozirda GAT uchun apparat-dasturiy vositalar ishlab chiqaruvchi Intyergraph,Corp  kompaniyasi qachon tashkil etilgan?
+A. 1969
+B. 1956
+C. 1971
+D. 1965
+ANSWER: A
+
+166. Xozirda GAT uchun apparat-dasturiy vositalar ishlab chiqaruvchi Intyergraph,Corp  kompaniyasi kim tomonidan tashkil etilgan
+A. Djim Midlok
+B. Dana Tomlin
+C. C.Rogyer Tomlinson
+D. D.Howard Fishyer
+ANSWER: A
+
+167. Intyergraph,Corp firmasi  qachon  birinchi bo‘lib qiymati 100 000 dollar atrofida bo‘lgan  uzoqlashgan ishchi stansiyani yaratdi.
+A. 1973
+B. 1975
+C. 1969
+D. 1980
+ANSWER: A
+
+168. GRASS Version 4.1 dasturi qachon ishlab chiqilgan?
+A. 1991 yilda ishlab chiqilgan
+B. 1965-yil oxirida
+C. 1969-yilda
+D. Yo‘q
+ANSWER: A
+
+169. Qaysi kompaniya Army Corps of Engineyers yo‘lidan ketib, o‘zining  ArcView 1 for Windows dasturiy  maxsulotini Internet tarmog‘iga joylashtirdi====
+A. ESRI,Inc. Kompaniyasi
+B. Intyergraph,Corp
+C. Paratiment
+D. Soldashion
+ANSWER: A
+
+170. Geoinformatsiya texnologiyalari nisbatan rivojlangan davlatlarda bu muammolar xozirda nimanitashkil etish asosida xal qilinmoqda.?
+A. Geofazoviy Ma’lumotlar Infrastrukturasini
+B. Fazoviy xaritalar asosida
+C. 3D model asosida
+D. barcha javoblar to’g’ri
+ANSWER: A
+
+171. Qachon AQSHda A-16 Sirkulyar chop etildi
+A. 1990 yil 19 oktyabrda
+B. 1997-yil 12-sentabrda
+C. 1989-yilda 17-iyulda
+D. 1985-yilda 2-avgustda
+ANSWER: A
+
+172. A-16 Sirkulyar ni yanada keng tadbiq etish maqsadida, 1994 11 aprelda   kim tarafidan "Ma’lumotlar olish va ulardan foydalanishni koordinatsiyalash: Fazoviy Ma’lumotlar Milliy Infrastrukturasi " nomli farmoyish chiqarildi.
+A. Prezident Klinton
+B. Seymen Jon
+C. Marc Daniel
+D. edgard toms0n
+ANSWER: A
+
+173. Sobiq ittifoq va MDX davlatlari  qachongacha Geoinformatsiya texnologiyalarining jaxondagi rivojlanishi jarayonlarida ishtirok etmadilar.?
+A. 1980-yillarning o‘rtalariga qadar
+B. 1970-yil boshida
+C. 1990-yil boshida
+D. 1975-yil oxirida
+ANSWER: A
+
+174. Geografik informasion tizimi –bu?
+A. fazoviy xarakterdagi ma’lumotlar va ular bilan bog‘langan fazoviy bo‘lmagan ma’lumotlarni to‘plash, saqlash, ishlov berish, tahlil qilish va akslantirish asosida geografik fazo haqida ma’lumot va bilim olish imkonini beruvchi tizimdir.
+B. fazoviy xarakterdagi ma’lumotlar
+C. fazoviy bo‘lmagan ma’lumotlarni tahlil qilish
+D. akslantirish asosida geografik fazo haqida ma’lumot
+ANSWER: A
+
+175. Hozirgi paytga kelib GATning nechta   ta’rifi mavjud?
+A. 20 dan ortiq
+B. 10 dan ortiq
+C. 8 ta
+D. Yo‘q
+ANSWER: A
+
+176. ArcINFO dasturi shaxsiy kompyuterlarning qaysi tizimlari bilan ishlaydi?
+A. Windows 95, 98, NT, XP va Vista), Macintosh, HP UNIX va boshqa tizimlar
+B. Windows 95
+C. Windows Vista
+D. Macintosh, HP UNIX va boshqa tizimlar
+ANSWER: A
+
+177. ArcINFO ni ta’riflashning yana bir usuli to‘g‘risida Marbl va Pyuke (1983) tomonidan berilgan. Unga ko‘ra?
+A. Geografik informatsiyaning o‘zi ham tizimlarga bo‘linadi
+B. Geografik informatsiyaning o‘zi ham tizimlarga bo‘linmaydi
+C. Geografik informatsiyaning  Fazoviy xaritaga dahli yo’q
+D. Barcha javoblar to’g’ri
+ANSWER: A
+
+178. GATning muhim  nechta komponenti mavjud.?
+A. 5 ta
+B. 3 ta
+C. 6 ta
+D. 8 ta
+ANSWER: A
+
+179. GAT lar qachondan boshlab xalq xo‘jaligining turli sohalarida keng qo‘llanib kelinmoqda?
+A. 60-yillarda
+B. 55-yillarda
+C. 65-yillarda
+D. 80-yillar oxirida
+ANSWER: A
+
+180. GATda axborot deyilganda nima tushuniladi?
+A. bizning ob’yekt haqidagi bilimlarimiz o‘lchovini aniqlovchi ma’lumotlar to‘plami tushiniladi.
+B. Fazoviy xaritalar
+C. 3D modellar
+D. Infratuzilmalar
+ANSWER: A
+
+181. Dasturiy ta’minot GAT da – bu?
+A. GAT funksional imkoniyatlarini joriy qilishga imkon beruvchi dasturiy vositalar to‘plami va ulardan foydalanish uchun zarur bo‘lgan dasturiy hujjatdir.
+B. ulardan foydalanish uchun zarur bo‘lgan dasturiy hujjatdir
+C. GAT funksional imkoniyatlarini joriy qilishga imkon beruvchi dasturiy vositalar to‘plami
+D. Fazoviy xaritalarni tashkil qilish vositasidir
+ANSWER: A
+
+182. Istalgan GAT nechta turga bo’linadi?
+A. 2 ta
+B. 3 ta
+C. 6 ta
+D. 4 ta
+ANSWER: A
+
+183. Istalgan GAT ikki tipdagi,  qanday ma’lumotlar asosida ishlaydi.?
+A. ya’ni fazoviy va atributiv ma’lumotlar asosida
+B. fazoviy va qiymatiy ma’lumotlar asosida
+C. atributiv va tasodifiy ma’lumotlar asosida
+D. To’g’ri javob yo’q
+ANSWER: A
+
+184. Fazoviy ma’lumotlar infrastrukturasi-bu?
+A. Barcha javoblar to’g’ri
+B. normativ-huquqiy hujjatlar
+C. fazoviy mexanizmlari, hamda ulardan turli kasbdagi foydalanuvchilar foydalana olishlari imkoniyatlari bilan aniqlanadi.
+D. Fazoviy ma’lumotlar infrastrukturasi zaruriy komponentlardan tashkil topgan
+ANSWER: A
+
+185. Fazoviy ma’lumotlar infrastrukturasi quyidagi nechta zaruriy komponentlardan tashkil topgan?
+A. 3 ta
+B. 2 ta
+C. 5 ta
+D. 4 ta
+ANSWER: A
+
+186. GAT lar funksional imkoniyatlariga ko‘ra nechta turga bo’linadi?
+A. 3 ta
+B. 5 ta
+C. 6 ta
+D. 1 ta
+ANSWER: A
+
+187. GAT lar muamoli-tematik yo‘naltirilganligiga ko‘ra nechta turga bo’linadi?
+A. 3 ta
+B. 1 ta
+C. 2 ta
+D. 6 ta
+ANSWER: A
+
+188. GAT lar geografik ma’lumotlarni tashkil qilish usuliga ko‘ra nechta turga bo’linadi?
+A. 3 ta
+B. 5 ta
+C. 4 ta
+D. 7 ta
+ANSWER: A
+
+189. GATni loyihalash jarayonini nechta asosiy bosqichi ajratib ko‘rsatiladi.?
+A. 5 ta
+B. 3 ta
+C. 1 ta
+D. 6 ta
+ANSWER: A
+
+190. GAT tarmog‘ini  SDI kirish va yurg‘izish prinsplaridan biri deb aytsa ham  bo‘ladi. U ko‘pgina foydalanuvchilar saytlarini birlashtirib  va publikatsiya qilishga undab nimalar bilan birgalikda geografik ma’lumotlardan foydalaniladi.?
+A. Barcha javoblar to’g’ri
+B. World
+C. Wide
+D. Web
+ANSWER: A
+
+191. GAT tarmog‘iga nechta asosiy qurilish bloklari kiradi?
+A. 3 ta
+B. 5 ta
+C. 1 ta
+D. 7 ta
+ANSWER: A
+
+192. Xar xil GAT larda foydalanish uchun qanday amal bajariladi?
+A. GAT ma’lumotlari va sersivlari GAT portallarda katalog yozishmalar kabi xujjatlashtiriladi.
+B. GAT portallarda katalog yozishmalar kabi xujjatlashtiriladi
+C. Barcha tizim birlashtiriladi
+D. Barcha javoblar to’g’ri
+ANSWER: A
+
+193. Barcha tizimlar fazoviy axborotning almashinuvini qo‘llaydilar, asosiy almashuv formatlari vositasi-bu?
+A. GAT va SAPR lar
+B. NEC
+C. KLC
+D. CVB
+ANSWER: A
+
+194. MarInfoprofessional kabi tizimlar nimani qo‘llaydi?
+A. MarBasic
+B. Aric
+C. ViewGAT
+D. Avenue
+ANSWER: A
+
+195. ArcGIS 3D Analyst – bu?
+A. turli xil soxalarni va 3 olchamli ob’yektlarni  taxlil qilish va ko‘rinishini yaratishda qo‘llanidladigan dastur.
+B. 3D modellashtirish dasturi
+C. topografik satxlarni modellashtirish uchun mo‘ljallangan.
+D. Barcha javoblar to’g’ri
+ANSWER: A
+
+196. MapInfo- bu?
+A. O‘zbekistonda eng keng tarqalgan GATdan biri
+B. Xaritalar to’plami
+C. Fazoviy xaritalar to’plami
+D. 3D xaritalar to’plami
+ANSWER: A
+
+197. ER Mapper – bu?
+A. Barcha javoblar to’g’ri
+B. fotogrammetrik axborotlarni katta hajmlarda qayta ishlash,
+C. mavzuviy kortagrafiya (geofizika, tabiiy resurslar, o‘rmon xo‘jaligi) aniqlik, xaritalarni nashr qilish
+D. uch yoqlama tasvirlarni vizuallash, algoritmlar kutubxonasi
+ANSWER: A
+
+198. MapInfo nechta funksiyani  amalga oshiradi?
+A. 6 ta
+B. 3 ta
+C. 5 ta
+D. 2 ta
+ANSWER: A
+
+199. GeoGraph-ning asosiy xususiyatlari nechta ?
+A. 3 ta
+B. 2 ta
+C. 1 ta
+D. 6 ta ++++
+ANSWER: A
