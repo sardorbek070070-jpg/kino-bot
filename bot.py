@@ -1,23 +1,45 @@
+import os
 import random
+import asyncio
+from starlette.applications import Starlette
+from starlette.responses import JSONResponse
+from starlette.routing import Route
+from starlette.requests import Request
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ConversationHandler, CallbackContext
+from telegram.ext import (
+    Application, CommandHandler, MessageHandler, filters,
+    ConversationHandler, CallbackContext
+)
+from telegram.request import HTTPXRequest
+from dotenv import load_dotenv
+
 from config import BOT_TOKEN, ADMIN_ID
 from database import (
     init_db, add_video, get_video, delete_video, list_all_videos,
-    register_user, get_total_users, get_today_users, get_week_users, get_active_users_last_24h
+    register_user, get_total_users, get_today_users,
+    get_week_users, get_active_users_last_24h
 )
 
-# -------------------- Holatlar (FSM o‘rniga) --------------------
+load_dotenv()
+
+# -------------------- Holatlar --------------------
 WAITING_FOR_VIDEO, WAITING_FOR_DESCRIPTION = range(2)
 
-# -------------------- Yordamchi funksiya --------------------
+# -------------------- Bot va Webhook --------------------
+WEBHOOK_PATH = "/webhook"
+RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if not RENDER_EXTERNAL_HOSTNAME:
+    raise ValueError("RENDER_EXTERNAL_HOSTNAME topilmadi. Render'da deploy qilganingizga ishonch hosil qiling.")
+WEBHOOK_URL = f"https://{RENDER_EXTERNAL_HOSTNAME}{WEBHOOK_PATH}"
+
+# -------------------- Yordamchi --------------------
 def generate_unique_code():
     while True:
         code = str(random.randint(100, 9999))
         if get_video(code) is None:
             return code
 
-# -------------------- /start --------------------
+# -------------------- Handlerlar --------------------
 async def start(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
     register_user(user_id)
@@ -28,7 +50,6 @@ async def start(update: Update, context: CallbackContext):
         parse_mode="Markdown"
     )
 
-# -------------------- Admin panel --------------------
 async def admin(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Siz admin emassiz!")
@@ -42,7 +63,6 @@ async def admin(update: Update, context: CallbackContext):
         parse_mode="Markdown"
     )
 
-# -------------------- Statistika --------------------
 async def stats(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Siz admin emassiz!")
@@ -60,7 +80,7 @@ async def stats(update: Update, context: CallbackContext):
         parse_mode="Markdown"
     )
 
-# -------------------- Video qo'shish (ConversationHandler) --------------------
+# -------------------- Video qo'shish (Conversation) --------------------
 async def addvideo_start(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Ruxsat yo‘q")
@@ -126,7 +146,7 @@ async def delvideo(update: Update, context: CallbackContext):
     else:
         await update.message.reply_text(f"❌ `{code}` topilmadi.", parse_mode="Markdown")
 
-# -------------------- Barcha videolar ro'yxati --------------------
+# -------------------- Barcha videolar --------------------
 async def listvideos(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Ruxsat yo‘q")
@@ -143,32 +163,52 @@ async def listvideos(update: Update, context: CallbackContext):
 # -------------------- Foydalanuvchi kod yuborganda --------------------
 async def handle_code(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
-    register_user(user_id)  # faollikni yangilaydi
+    register_user(user_id)
     text = update.message.text.strip()
     if not text.isdigit():
-        await update.message.reply_text("🤔 Iltimos, faqat raqamlardan iborat kod yuboring (masalan: 123).")
+        await update.message.reply_text("🤔 Iltimos, faqat raqamlardan iborat kod yuboring.")
         return
     video = get_video(text)
     if video:
         file_id, description = video
         caption = f"🎬 Kodi: {text}\n📖 {description}" if description else f"🎬 Kodi: {text}"
-        await update.message.reply_video(video=file_id, caption=caption)
+        try:
+            await update.message.reply_video(video=file_id, caption=caption, supports_streaming=True)
+        except Exception as e:
+            await context.bot.send_message(chat_id=ADMIN_ID, text=f"Video yuborish xatosi: {e}")
+            await update.message.reply_text("❌ Video yuborishda xatolik yuz berdi.")
     else:
         await update.message.reply_text(f"❌ `{text}` kodli video topilmadi.", parse_mode="Markdown")
 
-# -------------------- Asosiy --------------------
-def main():
+# -------------------- Webhook qabul qiluvchi --------------------
+async def webhook_handler(request: Request):
+    """Starlette uchun webhook handleri"""
+    data = await request.json()
+    update = Update.de_json(data, bot_application.bot)
+    await bot_application.process_update(update)
+    return JSONResponse({"ok": True})
+
+async def healthcheck(request: Request):
+    return JSONResponse({"status": "ok"})
+
+# -------------------- Asosiy (Starlette + Webhook) --------------------
+bot_application = None  # global o'zgaruvchi
+
+async def main():
+    global bot_application
     init_db()
-    app = Application.builder().token(BOT_TOKEN).build()
 
-    # Handlers
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("admin", admin))
-    app.add_handler(CommandHandler("stats", stats))
-    app.add_handler(CommandHandler("delvideo", delvideo))
-    app.add_handler(CommandHandler("list", listvideos))
+    # Bot ilovasini yaratish
+    bot_application = Application.builder().token(BOT_TOKEN).build()
 
-    # ConversationHandler video qo'shish uchun
+    # Handlerlarni qo'shish
+    bot_application.add_handler(CommandHandler("start", start))
+    bot_application.add_handler(CommandHandler("admin", admin))
+    bot_application.add_handler(CommandHandler("stats", stats))
+    bot_application.add_handler(CommandHandler("delvideo", delvideo))
+    bot_application.add_handler(CommandHandler("list", listvideos))
+    bot_application.add_handler(CommandHandler("cancel", cancel))
+
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("addvideo", addvideo_start)],
         states={
@@ -180,13 +220,26 @@ def main():
         },
         fallbacks=[CommandHandler("cancel", cancel)]
     )
-    app.add_handler(conv_handler)
+    bot_application.add_handler(conv_handler)
+    bot_application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_code))
 
-    # Kod qabul qilish (faqat raqamlar)
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_code))
+    # Webhook o'rnatish
+    await bot_application.initialize()
+    await bot_application.bot.set_webhook(WEBHOOK_URL)
 
-    print("✅ Bot ishga tushdi...")
-    app.run_polling()
+    # Starlette ilovasini tuzish
+    starlette_app = Starlette(debug=False, routes=[
+        Route(WEBHOOK_PATH, webhook_handler, methods=["POST"]),
+        Route("/healthcheck", healthcheck, methods=["GET"]),
+    ])
+
+    port = int(os.environ.get("PORT", 8080))
+    print(f"✅ Bot ishga tushdi, webhook: {WEBHOOK_URL}")
+    # Uvicorn ni ishga tushirish
+    import uvicorn
+    config = uvicorn.Config(starlette_app, host="0.0.0.0", port=port, log_level="info")
+    server = uvicorn.Server(config)
+    await server.serve()
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
