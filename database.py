@@ -79,3 +79,9 @@ async def get_active_users_last_24h():
     count = await conn.fetchval("SELECT COUNT(*) FROM users WHERE last_activity >= CURRENT_TIMESTAMP - INTERVAL '1 day'")
     await conn.close()
     return count
+
+async def get_all_user_ids():
+    conn = await asyncpg.connect(DATABASE_URL)
+    rows = await conn.fetch("SELECT user_id FROM users")
+    await conn.close()
+    return [row["user_id"] for row in rows]
