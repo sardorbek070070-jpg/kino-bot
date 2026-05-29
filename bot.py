@@ -15,13 +15,15 @@ from config import BOT_TOKEN, ADMIN_ID
 from database import (
     init_db, add_video, get_video, delete_video, list_all_videos,
     register_user, get_total_users, get_today_users,
-    get_week_users, get_active_users_last_24h
+    get_week_users, get_active_users_last_24h,
+    get_all_user_ids
 )
 
 load_dotenv()
 
 # -------------------- Holatlar --------------------
 WAITING_FOR_VIDEO, WAITING_FOR_CUSTOM_CODE, WAITING_FOR_DESCRIPTION = range(3)
+WAITING_BROADCAST = 3
 
 # -------------------- Webhook --------------------
 WEBHOOK_PATH = "/webhook"
@@ -50,7 +52,8 @@ async def admin(update: Update, context: CallbackContext):
         "/addvideo - yangi video qo'shish\n"
         "/delvideo <kod> - o'chirish\n"
         "/list - barcha videolar\n"
-        "/stats - statistika",
+        "/stats - statistika\n"
+        "/broadcast - obunachilarga xabar",
         parse_mode="Markdown"
     )
 
@@ -70,6 +73,55 @@ async def stats(update: Update, context: CallbackContext):
         f"🟢 24 soatda faol: {active}",
         parse_mode="Markdown"
     )
+
+# -------------------- Broadcast (barchaga xabar) --------------------
+async def broadcast_start(update: Update, context: CallbackContext):
+    if update.effective_user.id != ADMIN_ID:
+        await update.message.reply_text("⛔ Siz admin emassiz!")
+        return ConversationHandler.END
+    await update.message.reply_text(
+        "📢 Barcha obunachilarga yubormoqchi bo'lgan xabaringizni yuboring.\n"
+        "Matn, rasm, video, link — istalgan kontent.\n"
+        "/cancel – bekor qilish"
+    )
+    return WAITING_BROADCAST
+
+async def broadcast_send(update: Update, context: CallbackContext):
+    if update.effective_user.id != ADMIN_ID:
+        return ConversationHandler.END
+
+    msg = update.message
+    user_ids = await get_all_user_ids()
+    total = len(user_ids)
+
+    progress_msg = await msg.reply_text(f"📤 {total} ta foydalanuvchiga jo‘natish boshlandi...")
+
+    # Backgroundda jo‘natish, webhook bloklanmasligi uchun
+    asyncio.create_task(
+        _broadcast_task(
+            msg=msg,
+            progress_msg=progress_msg,
+            user_ids=user_ids,
+            total=total
+        )
+    )
+    return ConversationHandler.END
+
+async def _broadcast_task(msg, progress_msg, user_ids, total):
+    semaphore = asyncio.Semaphore(25)  # Telegram limitiga tushmaslik uchun
+
+    async def send_to_user(uid):
+        async with semaphore:
+            try:
+                await msg.copy(chat_id=uid)
+            except Exception:
+                pass  # Bloklagan yoki xatolik bo'lsa, o'tkazib yuboramiz
+
+    tasks = [asyncio.create_task(send_to_user(uid)) for uid in user_ids]
+    await asyncio.gather(*tasks)
+
+    # Yakuniy natija
+    await progress_msg.edit_text(f"✅ Xabar {total} ta foydalanuvchiga yuborildi.")
 
 # -------------------- Video qo'shish (o'zimiz kod kiritamiz) --------------------
 async def addvideo_start(update: Update, context: CallbackContext):
@@ -208,6 +260,7 @@ async def main():
     bot_application.add_handler(CommandHandler("list", listvideos))
     bot_application.add_handler(CommandHandler("cancel", cancel))
 
+    # Video qo'shish ConversationHandler
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("addvideo", addvideo_start)],
         states={
@@ -221,6 +274,19 @@ async def main():
         fallbacks=[CommandHandler("cancel", cancel)]
     )
     bot_application.add_handler(conv_handler)
+
+    # Broadcast ConversationHandler
+    broadcast_conv = ConversationHandler(
+        entry_points=[CommandHandler("broadcast", broadcast_start)],
+        states={
+            WAITING_BROADCAST: [
+                MessageHandler(filters.ALL & ~filters.COMMAND, broadcast_send)
+            ]
+        },
+        fallbacks=[CommandHandler("cancel", cancel)]
+    )
+    bot_application.add_handler(broadcast_conv)
+
     bot_application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_code))
 
     await bot_application.initialize()
