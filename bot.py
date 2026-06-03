@@ -38,7 +38,6 @@ WEBHOOK_URL = f"https://{RENDER_EXTERNAL_HOSTNAME}{WEBHOOK_PATH}"
 
 # -------------------- Yordamchi: reklama yuborish --------------------
 async def send_ad(bot, chat_id):
-    """Agar reklama mavjud bo'lsa, uni yuboradi va hisoblagichni oshiradi."""
     ad = await get_ad()
     if not ad:
         return
@@ -116,7 +115,7 @@ async def stats(update: Update, context: CallbackContext):
         parse_mode="Markdown"
     )
 
-# -------------------- Broadcast (barchaga xabar) --------------------
+# -------------------- Broadcast --------------------
 async def broadcast_start(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Siz admin emassiz!")
@@ -262,7 +261,7 @@ async def createref_get_name(update: Update, context: CallbackContext):
         await update.message.reply_text("❌ Iltimos, bo‘sh bo‘lmagan nom kiriting.")
         return WAITING_REF_NAME
 
-    # To'g'ri username (agar kerak bo'lsa, o'zingiz tekshiring)
+    # To'g'ri username (pastki chiziq bilan)
     bot_username = "KINO_bor_botbot"
 
     while True:
@@ -293,7 +292,7 @@ async def refstats(update: Update, context: CallbackContext):
         text += f"• `{name}` (kod: `{code}`) – {count} ta foydalanuvchi\n"
     await update.message.reply_text(text, parse_mode="Markdown")
 
-# -------------------- Reklama tizimi (start va kino kodidan keyin) --------------------
+# -------------------- Reklama tizimi --------------------
 async def setad_start(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Siz admin emassiz!")
@@ -392,7 +391,6 @@ async def handle_code(update: Update, context: CallbackContext):
         )
         await update.message.reply_text(links_msg)
 
-        # Reklama yuborish (agar o'rnatilgan bo'lsa)
         await send_ad(context.bot, user_id)
     else:
         await update.message.reply_text(f"❌ `{text}` kodli video topilmadi.", parse_mode="Markdown")
@@ -424,7 +422,6 @@ async def main():
     bot_application.add_handler(CommandHandler("adstats", adstats))
     bot_application.add_handler(CommandHandler("cancel", cancel))
 
-    # Video qo'shish
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("addvideo", addvideo_start)],
         states={
@@ -439,7 +436,6 @@ async def main():
     )
     bot_application.add_handler(conv_handler)
 
-    # Broadcast
     broadcast_conv = ConversationHandler(
         entry_points=[CommandHandler("broadcast", broadcast_start)],
         states={
@@ -449,7 +445,6 @@ async def main():
     )
     bot_application.add_handler(broadcast_conv)
 
-    # Referal yaratish
     ref_conv = ConversationHandler(
         entry_points=[CommandHandler("createref", createref_start)],
         states={
@@ -459,7 +454,6 @@ async def main():
     )
     bot_application.add_handler(ref_conv)
 
-    # Reklama o'rnatish
     ad_conv = ConversationHandler(
         entry_points=[CommandHandler("setad", setad_start)],
         states={
@@ -469,7 +463,6 @@ async def main():
     )
     bot_application.add_handler(ad_conv)
 
-    # Kod qabul qilish
     bot_application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_code))
 
     await bot_application.initialize()
