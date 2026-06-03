@@ -59,7 +59,7 @@ async def send_ad(bot, chat_id):
         elif content_type == "animation":
             await bot.send_animation(chat_id=chat_id, animation=file_id, caption=caption or "")
         else:
-            return  # qo'llab-quvvatlanmaydi
+            return
         await increment_ad_count()
     except Exception as e:
         print(f"Reklama yuborishda xatolik: {e}")
@@ -70,12 +70,12 @@ async def start(update: Update, context: CallbackContext):
     referral_code = context.args[0] if context.args else None
     await register_user_start(user_id, referral_code)
     await update.message.reply_text(
-        "🎬 **Kino botiga xush kelibsiz! kino kanalimiz @kino\_boru **\n\n"
+        "🎬 **Kino botiga xush kelibsiz!**\n"
+        "📣 Kino kanalimiz: @kino\\_boru\n\n"
         "Film kodini raqamlarda yuboring.\n"
         "Admin: /admin",
         parse_mode="Markdown"
     )
-    # Reklama yuborish
     await send_ad(context.bot, user_id)
 
 # -------------------- Admin panel --------------------
@@ -255,16 +255,23 @@ async def createref_start(update: Update, context: CallbackContext):
     return WAITING_REF_NAME
 
 async def createref_get_name(update: Update, context: CallbackContext):
+    if update.effective_user.id != ADMIN_ID:
+        return ConversationHandler.END
     name = update.message.text.strip()
     if not name:
         await update.message.reply_text("❌ Iltimos, bo‘sh bo‘lmagan nom kiriting.")
         return WAITING_REF_NAME
+
+    # Bot username'ni aniq olamiz (agar kerak bo'lsa qo'lda to'g'rilaymiz)
+    bot_username = context.bot.username
+    if not bot_username or "_" not in bot_username:
+        bot_username = "KINO_bor_botbot"   # sizning haqiqiy username
+
     while True:
         code = secrets.token_hex(3)
         if not await check_referral_code(code):
             break
     await create_referral(name, code)
-    bot_username = context.bot.username
     link = f"https://t.me/{bot_username}?start={code}"
     await update.message.reply_text(
         f"✅ **Yangi referal havola yaratildi**\n\n"
@@ -310,7 +317,6 @@ async def setad_get_content(update: Update, context: CallbackContext):
     caption = msg.caption or ""
 
     if msg.text and not msg.caption:
-        # Oddiy matn
         content_type = "text"
         text = msg.text
     elif msg.photo:
@@ -362,7 +368,7 @@ async def adstats(update: Update, context: CallbackContext):
     else:
         await update.message.reply_text("📭 Hozirda hech qanday reklama o‘rnatilmagan.")
 
-# -------------------- Kod yuborish (video + reklama) --------------------
+# -------------------- Kod yuborish (video + havolalar + reklama) --------------------
 async def handle_code(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
     await register_user_start(user_id)
@@ -380,7 +386,15 @@ async def handle_code(update: Update, context: CallbackContext):
             await context.bot.send_message(chat_id=ADMIN_ID, text=f"Video yuborish xatosi: {e}")
             await update.message.reply_text("❌ Video yuborishda xatolik yuz berdi.")
             return
-        # Videodan keyin reklama yuborish
+
+        # Videodan keyin avtomatik Instagram + kanal havolalari
+        links_msg = (
+            "📱 Instagram: https://instagram.com/Bear_uzb070\n"
+            "📣 Kino kanal: @kino_boru"
+        )
+        await update.message.reply_text(links_msg)
+
+        # Reklama yuborish (agar o‘rnatilgan bo‘lsa)
         await send_ad(context.bot, user_id)
     else:
         await update.message.reply_text(f"❌ `{text}` kodli video topilmadi.", parse_mode="Markdown")
