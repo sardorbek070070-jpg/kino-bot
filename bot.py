@@ -70,7 +70,7 @@ async def start(update: Update, context: CallbackContext):
     referral_code = context.args[0] if context.args else None
     await register_user_start(user_id, referral_code)
     await update.message.reply_text(
-        "🎬 **Kino botiga xush kelibsiz! kino kanalimiz @kino_boru **\n\n"
+        "🎬 **Kino botiga xush kelibsiz! kino kanalimiz @kino\_boru **\n\n"
         "Film kodini raqamlarda yuboring.\n"
         "Admin: /admin",
         parse_mode="Markdown"
