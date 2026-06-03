@@ -36,7 +36,7 @@ if not RENDER_EXTERNAL_HOSTNAME:
     raise ValueError("RENDER_EXTERNAL_HOSTNAME topilmadi")
 WEBHOOK_URL = f"https://{RENDER_EXTERNAL_HOSTNAME}{WEBHOOK_PATH}"
 
-# -------------------- Yordamchi: reklama yuborish --------------------
+# -------------------- Reklama yuborish --------------------
 async def send_ad(bot, chat_id):
     ad = await get_ad()
     if not ad:
@@ -130,12 +130,10 @@ async def broadcast_start(update: Update, context: CallbackContext):
 async def broadcast_send(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         return ConversationHandler.END
-
     msg = update.message
     user_ids = await get_all_user_ids()
     total = len(user_ids)
     progress_msg = await msg.reply_text(f"📤 {total} ta foydalanuvchiga jo‘natish boshlandi...")
-
     asyncio.create_task(
         _broadcast_task(msg=msg, progress_msg=progress_msg, user_ids=user_ids, total=total)
     )
@@ -245,7 +243,7 @@ async def listvideos(update: Update, context: CallbackContext):
         text += f"🔹 Kod: `{code}` — {desc or 'Tavsifsiz'}\n"
     await update.message.reply_text(text, parse_mode="Markdown")
 
-# -------------------- Referal tizimi --------------------
+# -------------------- Referal tizimi (TO‘G‘RI USERNAME) --------------------
 async def createref_start(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Siz admin emassiz!")
@@ -261,7 +259,7 @@ async def createref_get_name(update: Update, context: CallbackContext):
         await update.message.reply_text("❌ Iltimos, bo‘sh bo‘lmagan nom kiriting.")
         return WAITING_REF_NAME
 
-    # To'g'ri username (pastki chiziq bilan)
+    # Aynan shu username to‘g‘ri — pastki chiziq bor
     bot_username = "KINO_bor_botbot"
 
     while True:
@@ -422,6 +420,7 @@ async def main():
     bot_application.add_handler(CommandHandler("adstats", adstats))
     bot_application.add_handler(CommandHandler("cancel", cancel))
 
+    # Video qo'shish
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("addvideo", addvideo_start)],
         states={
@@ -436,6 +435,7 @@ async def main():
     )
     bot_application.add_handler(conv_handler)
 
+    # Broadcast
     broadcast_conv = ConversationHandler(
         entry_points=[CommandHandler("broadcast", broadcast_start)],
         states={
@@ -445,6 +445,7 @@ async def main():
     )
     bot_application.add_handler(broadcast_conv)
 
+    # Referal yaratish
     ref_conv = ConversationHandler(
         entry_points=[CommandHandler("createref", createref_start)],
         states={
@@ -454,6 +455,7 @@ async def main():
     )
     bot_application.add_handler(ref_conv)
 
+    # Reklama o'rnatish
     ad_conv = ConversationHandler(
         entry_points=[CommandHandler("setad", setad_start)],
         states={
@@ -463,6 +465,7 @@ async def main():
     )
     bot_application.add_handler(ad_conv)
 
+    # Kod qabul qilish (oddiy matn)
     bot_application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_code))
 
     await bot_application.initialize()
