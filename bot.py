@@ -1,5 +1,6 @@
 import os
 import asyncio
+import secrets
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
@@ -14,9 +15,10 @@ from dotenv import load_dotenv
 from config import BOT_TOKEN, ADMIN_ID
 from database import (
     init_db, add_video, get_video, delete_video, list_all_videos,
-    register_user, get_total_users, get_today_users,
+    register_user_start, get_total_users, get_today_users,
     get_week_users, get_active_users_last_24h,
-    get_all_user_ids
+    get_all_user_ids, create_referral, check_referral_code, get_all_referrals,
+    set_ad, get_ad, remove_ad, increment_ad_count
 )
 
 load_dotenv()
@@ -24,6 +26,8 @@ load_dotenv()
 # -------------------- Holatlar --------------------
 WAITING_FOR_VIDEO, WAITING_FOR_CUSTOM_CODE, WAITING_FOR_DESCRIPTION = range(3)
 WAITING_BROADCAST = 3
+WAITING_REF_NAME = 4
+WAITING_AD_CONTENT = 5
 
 # -------------------- Webhook --------------------
 WEBHOOK_PATH = "/webhook"
@@ -32,17 +36,49 @@ if not RENDER_EXTERNAL_HOSTNAME:
     raise ValueError("RENDER_EXTERNAL_HOSTNAME topilmadi")
 WEBHOOK_URL = f"https://{RENDER_EXTERNAL_HOSTNAME}{WEBHOOK_PATH}"
 
-# -------------------- Handlerlar --------------------
+# -------------------- Yordamchi: reklama yuborish --------------------
+async def send_ad(bot, chat_id):
+    """Agar reklama mavjud bo'lsa, uni yuboradi va hisoblagichni oshiradi."""
+    ad = await get_ad()
+    if not ad:
+        return
+    content_type, file_id, text, caption, _ = ad
+    try:
+        if content_type == "text":
+            await bot.send_message(chat_id=chat_id, text=text)
+        elif content_type == "photo":
+            await bot.send_photo(chat_id=chat_id, photo=file_id, caption=caption or "")
+        elif content_type == "video":
+            await bot.send_video(chat_id=chat_id, video=file_id, caption=caption or "")
+        elif content_type == "document":
+            await bot.send_document(chat_id=chat_id, document=file_id, caption=caption or "")
+        elif content_type == "audio":
+            await bot.send_audio(chat_id=chat_id, audio=file_id, caption=caption or "")
+        elif content_type == "voice":
+            await bot.send_voice(chat_id=chat_id, voice=file_id, caption=caption or "")
+        elif content_type == "animation":
+            await bot.send_animation(chat_id=chat_id, animation=file_id, caption=caption or "")
+        else:
+            return  # qo'llab-quvvatlanmaydi
+        await increment_ad_count()
+    except Exception as e:
+        print(f"Reklama yuborishda xatolik: {e}")
+
+# -------------------- Start --------------------
 async def start(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
-    await register_user(user_id)
+    referral_code = context.args[0] if context.args else None
+    await register_user_start(user_id, referral_code)
     await update.message.reply_text(
         "🎬 **Kino botiga xush kelibsiz!**\n\n"
         "Film kodini raqamlarda yuboring.\n"
         "Admin: /admin",
         parse_mode="Markdown"
     )
+    # Reklama yuborish
+    await send_ad(context.bot, user_id)
 
+# -------------------- Admin panel --------------------
 async def admin(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Siz admin emassiz!")
@@ -53,10 +89,16 @@ async def admin(update: Update, context: CallbackContext):
         "/delvideo <kod> - o'chirish\n"
         "/list - barcha videolar\n"
         "/stats - statistika\n"
-        "/broadcast - obunachilarga xabar",
+        "/broadcast - obunachilarga xabar\n"
+        "/createref - referal havola yaratish\n"
+        "/refstats - referallar statistikasi\n"
+        "/setad - start/kino reklama o'rnatish\n"
+        "/removead - reklamani o'chirish\n"
+        "/adstats - reklama statistikasi",
         parse_mode="Markdown"
     )
 
+# -------------------- Statistika --------------------
 async def stats(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Siz admin emassiz!")
@@ -93,37 +135,26 @@ async def broadcast_send(update: Update, context: CallbackContext):
     msg = update.message
     user_ids = await get_all_user_ids()
     total = len(user_ids)
-
     progress_msg = await msg.reply_text(f"📤 {total} ta foydalanuvchiga jo‘natish boshlandi...")
 
-    # Backgroundda jo‘natish, webhook bloklanmasligi uchun
     asyncio.create_task(
-        _broadcast_task(
-            msg=msg,
-            progress_msg=progress_msg,
-            user_ids=user_ids,
-            total=total
-        )
+        _broadcast_task(msg=msg, progress_msg=progress_msg, user_ids=user_ids, total=total)
     )
     return ConversationHandler.END
 
 async def _broadcast_task(msg, progress_msg, user_ids, total):
-    semaphore = asyncio.Semaphore(25)  # Telegram limitiga tushmaslik uchun
-
+    semaphore = asyncio.Semaphore(25)
     async def send_to_user(uid):
         async with semaphore:
             try:
                 await msg.copy(chat_id=uid)
             except Exception:
-                pass  # Bloklagan yoki xatolik bo'lsa, o'tkazib yuboramiz
-
+                pass
     tasks = [asyncio.create_task(send_to_user(uid)) for uid in user_ids]
     await asyncio.gather(*tasks)
-
-    # Yakuniy natija
     await progress_msg.edit_text(f"✅ Xabar {total} ta foydalanuvchiga yuborildi.")
 
-# -------------------- Video qo'shish (o'zimiz kod kiritamiz) --------------------
+# -------------------- Video qo'shish --------------------
 async def addvideo_start(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Ruxsat yo‘q")
@@ -145,7 +176,6 @@ async def addvideo_custom_code(update: Update, context: CallbackContext):
     if not code.isdigit():
         await update.message.reply_text("❌ Kod faqat raqamlardan iborat bo‘lishi kerak. Qaytadan kiriting:")
         return WAITING_FOR_CUSTOM_CODE
-    # Kod unikalligini tekshirish
     existing = await get_video(code)
     if existing:
         await update.message.reply_text(f"⚠️ `{code}` kodi allaqachon mavjud. Boshqa kod kiriting:", parse_mode="Markdown")
@@ -216,10 +246,126 @@ async def listvideos(update: Update, context: CallbackContext):
         text += f"🔹 Kod: `{code}` — {desc or 'Tavsifsiz'}\n"
     await update.message.reply_text(text, parse_mode="Markdown")
 
-# -------------------- Foydalanuvchi kod yuborganda --------------------
+# -------------------- Referal tizimi --------------------
+async def createref_start(update: Update, context: CallbackContext):
+    if update.effective_user.id != ADMIN_ID:
+        await update.message.reply_text("⛔ Siz admin emassiz!")
+        return ConversationHandler.END
+    await update.message.reply_text("🔗 Referal uchun nom bering (masalan, 'instagram'):")
+    return WAITING_REF_NAME
+
+async def createref_get_name(update: Update, context: CallbackContext):
+    name = update.message.text.strip()
+    if not name:
+        await update.message.reply_text("❌ Iltimos, bo‘sh bo‘lmagan nom kiriting.")
+        return WAITING_REF_NAME
+    while True:
+        code = secrets.token_hex(3)
+        if not await check_referral_code(code):
+            break
+    await create_referral(name, code)
+    bot_username = context.bot.username
+    link = f"https://t.me/{bot_username}?start={code}"
+    await update.message.reply_text(
+        f"✅ **Yangi referal havola yaratildi**\n\n"
+        f"📌 Nomi: `{name}`\n"
+        f"🔗 Havola: {link}\n"
+        f"🆔 Kod: `{code}`",
+        parse_mode="Markdown"
+    )
+    return ConversationHandler.END
+
+async def refstats(update: Update, context: CallbackContext):
+    if update.effective_user.id != ADMIN_ID:
+        await update.message.reply_text("⛔ Ruxsat yo‘q")
+        return
+    referrals = await get_all_referrals()
+    if not referrals:
+        await update.message.reply_text("📭 Hali hech qanday referal havola yo‘q.")
+        return
+    text = "📊 **Referallar statistikasi**\n\n"
+    for code, name, count in referrals:
+        text += f"• `{name}` (kod: `{code}`) – {count} ta foydalanuvchi\n"
+    await update.message.reply_text(text, parse_mode="Markdown")
+
+# -------------------- Reklama tizimi (start va kino kodidan keyin) --------------------
+async def setad_start(update: Update, context: CallbackContext):
+    if update.effective_user.id != ADMIN_ID:
+        await update.message.reply_text("⛔ Siz admin emassiz!")
+        return ConversationHandler.END
+    await update.message.reply_text(
+        "📢 Reklama sifatida yubormoqchi bo'lgan kontentni yuboring.\n"
+        "Matn, rasm, video, hujjat, audio, animatsiya — ixtiyoriy.\n"
+        "/cancel – bekor qilish"
+    )
+    return WAITING_AD_CONTENT
+
+async def setad_get_content(update: Update, context: CallbackContext):
+    if update.effective_user.id != ADMIN_ID:
+        return ConversationHandler.END
+    msg = update.message
+    content_type = None
+    file_id = None
+    text = None
+    caption = msg.caption or ""
+
+    if msg.text and not msg.caption:
+        # Oddiy matn
+        content_type = "text"
+        text = msg.text
+    elif msg.photo:
+        content_type = "photo"
+        file_id = msg.photo[-1].file_id
+    elif msg.video:
+        content_type = "video"
+        file_id = msg.video.file_id
+    elif msg.document:
+        content_type = "document"
+        file_id = msg.document.file_id
+    elif msg.audio:
+        content_type = "audio"
+        file_id = msg.audio.file_id
+    elif msg.voice:
+        content_type = "voice"
+        file_id = msg.voice.file_id
+    elif msg.animation:
+        content_type = "animation"
+        file_id = msg.animation.file_id
+    else:
+        await update.message.reply_text("❌ Ushbu kontent turi qo'llab-quvvatlanmaydi. Boshqa narsa yuboring.")
+        return WAITING_AD_CONTENT
+
+    await set_ad(content_type, file_id, text, caption)
+    await update.message.reply_text(
+        f"✅ Reklama saqlandi!\n"
+        f"Turi: {content_type}\n"
+        f"Endi har bir /start va kino kodidan keyin avtomatik yuboriladi.",
+        parse_mode="Markdown"
+    )
+    return ConversationHandler.END
+
+async def removead(update: Update, context: CallbackContext):
+    if update.effective_user.id != ADMIN_ID:
+        await update.message.reply_text("⛔ Ruxsat yo‘q")
+        return
+    await remove_ad()
+    await update.message.reply_text("🗑️ Reklama o'chirildi. Endi start va kodlardan keyin ko'rsatilmaydi.")
+
+async def adstats(update: Update, context: CallbackContext):
+    if update.effective_user.id != ADMIN_ID:
+        await update.message.reply_text("⛔ Ruxsat yo‘q")
+        return
+    ad = await get_ad()
+    if ad:
+        count = ad["send_count"]
+        await update.message.reply_text(f"📊 Reklama {count} marta yuborilgan.")
+    else:
+        await update.message.reply_text("📭 Hozirda hech qanday reklama o‘rnatilmagan.")
+
+# -------------------- Kod yuborish (video + reklama) --------------------
 async def handle_code(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
-    await register_user(user_id)
+    await register_user_start(user_id)
     text = update.message.text.strip()
     if not text.isdigit():
         await update.message.reply_text("🤔 Iltimos, faqat raqamlardan iborat kod yuboring.")
@@ -233,6 +379,9 @@ async def handle_code(update: Update, context: CallbackContext):
         except Exception as e:
             await context.bot.send_message(chat_id=ADMIN_ID, text=f"Video yuborish xatosi: {e}")
             await update.message.reply_text("❌ Video yuborishda xatolik yuz berdi.")
+            return
+        # Videodan keyin reklama yuborish
+        await send_ad(context.bot, user_id)
     else:
         await update.message.reply_text(f"❌ `{text}` kodli video topilmadi.", parse_mode="Markdown")
 
@@ -253,11 +402,15 @@ async def main():
     await init_db()
     bot_application = Application.builder().token(BOT_TOKEN).build()
 
+    # Asosiy komandalar
     bot_application.add_handler(CommandHandler("start", start))
     bot_application.add_handler(CommandHandler("admin", admin))
     bot_application.add_handler(CommandHandler("stats", stats))
     bot_application.add_handler(CommandHandler("delvideo", delvideo))
     bot_application.add_handler(CommandHandler("list", listvideos))
+    bot_application.add_handler(CommandHandler("refstats", refstats))
+    bot_application.add_handler(CommandHandler("removead", removead))
+    bot_application.add_handler(CommandHandler("adstats", adstats))
     bot_application.add_handler(CommandHandler("cancel", cancel))
 
     # Video qo'shish ConversationHandler
@@ -287,6 +440,29 @@ async def main():
     )
     bot_application.add_handler(broadcast_conv)
 
+    # Referal yaratish ConversationHandler
+    ref_conv = ConversationHandler(
+        entry_points=[CommandHandler("createref", createref_start)],
+        states={
+            WAITING_REF_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, createref_get_name)]
+        },
+        fallbacks=[CommandHandler("cancel", cancel)]
+    )
+    bot_application.add_handler(ref_conv)
+
+    # Reklama o'rnatish ConversationHandler
+    ad_conv = ConversationHandler(
+        entry_points=[CommandHandler("setad", setad_start)],
+        states={
+            WAITING_AD_CONTENT: [
+                MessageHandler(filters.ALL & ~filters.COMMAND, setad_get_content)
+            ]
+        },
+        fallbacks=[CommandHandler("cancel", cancel)]
+    )
+    bot_application.add_handler(ad_conv)
+
+    # Eng oxirida: oddiy matnli kodlar
     bot_application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_code))
 
     await bot_application.initialize()
