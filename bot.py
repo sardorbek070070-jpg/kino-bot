@@ -262,10 +262,8 @@ async def createref_get_name(update: Update, context: CallbackContext):
         await update.message.reply_text("❌ Iltimos, bo‘sh bo‘lmagan nom kiriting.")
         return WAITING_REF_NAME
 
-    # Bot username'ni aniq olamiz (agar kerak bo'lsa qo'lda to'g'rilaymiz)
-    bot_username = context.bot.username
-    if not bot_username or "_" not in bot_username:
-        bot_username = "KINO_bor_botbot"   # sizning haqiqiy username
+    # To'g'ri username (agar kerak bo'lsa, o'zingiz tekshiring)
+    bot_username = "KINO_bor_botbot"
 
     while True:
         code = secrets.token_hex(3)
@@ -387,14 +385,14 @@ async def handle_code(update: Update, context: CallbackContext):
             await update.message.reply_text("❌ Video yuborishda xatolik yuz berdi.")
             return
 
-        # Videodan keyin avtomatik Instagram + kanal havolalari
+        # Videodan keyin avtomatik havolalar
         links_msg = (
             "📱 Instagram: https://instagram.com/Bear_uzb070\n"
             "📣 Kino kanal: @kino_boru"
         )
         await update.message.reply_text(links_msg)
 
-        # Reklama yuborish (agar o‘rnatilgan bo‘lsa)
+        # Reklama yuborish (agar o'rnatilgan bo'lsa)
         await send_ad(context.bot, user_id)
     else:
         await update.message.reply_text(f"❌ `{text}` kodli video topilmadi.", parse_mode="Markdown")
@@ -416,7 +414,6 @@ async def main():
     await init_db()
     bot_application = Application.builder().token(BOT_TOKEN).build()
 
-    # Asosiy komandalar
     bot_application.add_handler(CommandHandler("start", start))
     bot_application.add_handler(CommandHandler("admin", admin))
     bot_application.add_handler(CommandHandler("stats", stats))
@@ -427,7 +424,7 @@ async def main():
     bot_application.add_handler(CommandHandler("adstats", adstats))
     bot_application.add_handler(CommandHandler("cancel", cancel))
 
-    # Video qo'shish ConversationHandler
+    # Video qo'shish
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("addvideo", addvideo_start)],
         states={
@@ -442,19 +439,17 @@ async def main():
     )
     bot_application.add_handler(conv_handler)
 
-    # Broadcast ConversationHandler
+    # Broadcast
     broadcast_conv = ConversationHandler(
         entry_points=[CommandHandler("broadcast", broadcast_start)],
         states={
-            WAITING_BROADCAST: [
-                MessageHandler(filters.ALL & ~filters.COMMAND, broadcast_send)
-            ]
+            WAITING_BROADCAST: [MessageHandler(filters.ALL & ~filters.COMMAND, broadcast_send)]
         },
         fallbacks=[CommandHandler("cancel", cancel)]
     )
     bot_application.add_handler(broadcast_conv)
 
-    # Referal yaratish ConversationHandler
+    # Referal yaratish
     ref_conv = ConversationHandler(
         entry_points=[CommandHandler("createref", createref_start)],
         states={
@@ -464,19 +459,17 @@ async def main():
     )
     bot_application.add_handler(ref_conv)
 
-    # Reklama o'rnatish ConversationHandler
+    # Reklama o'rnatish
     ad_conv = ConversationHandler(
         entry_points=[CommandHandler("setad", setad_start)],
         states={
-            WAITING_AD_CONTENT: [
-                MessageHandler(filters.ALL & ~filters.COMMAND, setad_get_content)
-            ]
+            WAITING_AD_CONTENT: [MessageHandler(filters.ALL & ~filters.COMMAND, setad_get_content)]
         },
         fallbacks=[CommandHandler("cancel", cancel)]
     )
     bot_application.add_handler(ad_conv)
 
-    # Eng oxirida: oddiy matnli kodlar
+    # Kod qabul qilish
     bot_application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_code))
 
     await bot_application.initialize()
