@@ -247,22 +247,25 @@ async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
     conn = await asyncpg.connect(DATABASE_URL)
     try:
         async with conn.transaction():
+            # Avval foydalanuvchi bu obunani bajarganmi tekshiramiz
             existing = await conn.fetchval(
                 "SELECT 1 FROM user_completed_subs WHERE user_id = $1 AND sub_id = $2",
                 user_id, sub_id
             )
             if existing:
-                return False  # Allaqachon bajargan
+                return False  # Allaqachon bajargan – hisoblanmaydi
 
+            # Yangi yozuv qo'shamiz
             await conn.execute(
                 "INSERT INTO user_completed_subs (user_id, sub_id) VALUES ($1, $2)",
                 user_id, sub_id
             )
+            # Hisoblagichni oshiramiz (faqat birinchi marta)
             await conn.execute(
                 "UPDATE mandatory_subscriptions SET current_count = current_count + 1 WHERE id = $1",
                 sub_id
             )
-
+            # Limitga yetganligini tekshiramiz
             row = await conn.fetchrow(
                 "SELECT current_count, limit_count FROM mandatory_subscriptions WHERE id = $1",
                 sub_id
@@ -274,7 +277,7 @@ async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
                     sub_id
                 )
                 deactivated = True
-            # transaction blokidan chiqishda avtomatik commit bo‘ladi
+            # transaction blokidan chiqishda avtomatik commit bo'ladi
             return deactivated
     finally:
         await conn.close()
