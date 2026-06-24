@@ -3,3 +3,4 @@ python-dotenv
 starlette
 uvicorn
 aiosqlite
+asyncpg
