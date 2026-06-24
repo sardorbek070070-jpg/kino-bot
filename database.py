@@ -14,7 +14,7 @@ async def init_db():
         )
     ''')
 
-    # ----- Videolar (oddiy) -----
+    # ----- Videolar -----
     await conn.execute('''
         CREATE TABLE IF NOT EXISTS videos (
             code TEXT PRIMARY KEY,
@@ -218,7 +218,7 @@ async def increment_ad_count():
     await conn.close()
 
 
-# -------------------- Majburiy obuna (TUZATILGAN) --------------------
+# -------------------- Majburiy obuna --------------------
 async def get_active_mandatory_subs():
     conn = await asyncpg.connect(DATABASE_URL)
     rows = await conn.fetch(
@@ -240,32 +240,25 @@ async def is_user_completed_sub(user_id: int, sub_id: int) -> bool:
 
 
 async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
-    """
-    Foydalanuvchi obunani bajargan deb belgilaydi.
-    Faqat birinchi marta bajargan foydalanuvchi hisobga olinadi.
-    """
     conn = await asyncpg.connect(DATABASE_URL)
     try:
         async with conn.transaction():
-            # Avval foydalanuvchi bu obunani bajarganmi tekshiramiz
             existing = await conn.fetchval(
                 "SELECT 1 FROM user_completed_subs WHERE user_id = $1 AND sub_id = $2",
                 user_id, sub_id
             )
             if existing:
-                return False  # Allaqachon bajargan – hisoblanmaydi
+                return False  # Allaqachon bajarilgan – hisoblanmaydi
 
-            # Yangi yozuv qo'shamiz
             await conn.execute(
                 "INSERT INTO user_completed_subs (user_id, sub_id) VALUES ($1, $2)",
                 user_id, sub_id
             )
-            # Hisoblagichni oshiramiz (faqat birinchi marta)
             await conn.execute(
                 "UPDATE mandatory_subscriptions SET current_count = current_count + 1 WHERE id = $1",
                 sub_id
             )
-            # Limitga yetganligini tekshiramiz
+
             row = await conn.fetchrow(
                 "SELECT current_count, limit_count FROM mandatory_subscriptions WHERE id = $1",
                 sub_id
@@ -277,7 +270,6 @@ async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
                     sub_id
                 )
                 deactivated = True
-            # transaction blokidan chiqishda avtomatik commit bo'ladi
             return deactivated
     finally:
         await conn.close()
