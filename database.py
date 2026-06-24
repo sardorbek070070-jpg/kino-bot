@@ -72,6 +72,7 @@ async def init_db():
 
     await conn.close()
 
+
 # -------------------- Foydalanuvchi --------------------
 async def register_user_start(user_id, referral_code=None):
     conn = await asyncpg.connect(DATABASE_URL)
@@ -94,11 +95,13 @@ async def register_user_start(user_id, referral_code=None):
             )
     await conn.close()
 
+
 async def get_total_users():
     conn = await asyncpg.connect(DATABASE_URL)
     count = await conn.fetchval("SELECT COUNT(*) FROM users")
     await conn.close()
     return count
+
 
 async def get_today_users():
     conn = await asyncpg.connect(DATABASE_URL)
@@ -106,23 +109,29 @@ async def get_today_users():
     await conn.close()
     return count
 
+
 async def get_week_users():
     conn = await asyncpg.connect(DATABASE_URL)
     count = await conn.fetchval("SELECT COUNT(*) FROM users WHERE first_start >= CURRENT_DATE - INTERVAL '7 days'")
     await conn.close()
     return count
 
+
 async def get_active_users_last_24h():
     conn = await asyncpg.connect(DATABASE_URL)
-    count = await conn.fetchval("SELECT COUNT(*) FROM users WHERE last_activity >= CURRENT_TIMESTAMP - INTERVAL '1 day'")
+    count = await conn.fetchval(
+        "SELECT COUNT(*) FROM users WHERE last_activity >= CURRENT_TIMESTAMP - INTERVAL '1 day'"
+    )
     await conn.close()
     return count
+
 
 async def get_all_user_ids():
     conn = await asyncpg.connect(DATABASE_URL)
     rows = await conn.fetch("SELECT user_id FROM users")
     await conn.close()
     return [r["user_id"] for r in rows]
+
 
 # -------------------- Video funksiyalari --------------------
 async def add_video(code: str, file_id: str, description: str = ""):
@@ -133,16 +142,19 @@ async def add_video(code: str, file_id: str, description: str = ""):
     )
     await conn.close()
 
+
 async def get_video(code: str):
     conn = await asyncpg.connect(DATABASE_URL)
     row = await conn.fetchrow("SELECT file_id, description FROM videos WHERE code = $1", code)
     await conn.close()
     return row
 
+
 async def delete_video(code: str):
     conn = await asyncpg.connect(DATABASE_URL)
     await conn.execute("DELETE FROM videos WHERE code = $1", code)
     await conn.close()
+
 
 async def list_all_videos():
     conn = await asyncpg.connect(DATABASE_URL)
@@ -150,11 +162,13 @@ async def list_all_videos():
     await conn.close()
     return [(r["code"], r["description"]) for r in rows]
 
+
 # -------------------- Referallar --------------------
 async def create_referral(name, code):
     conn = await asyncpg.connect(DATABASE_URL)
     await conn.execute("INSERT INTO referrals (code, name) VALUES ($1, $2)", code, name)
     await conn.close()
+
 
 async def check_referral_code(code):
     conn = await asyncpg.connect(DATABASE_URL)
@@ -162,11 +176,13 @@ async def check_referral_code(code):
     await conn.close()
     return row is not None
 
+
 async def get_all_referrals():
     conn = await asyncpg.connect(DATABASE_URL)
     rows = await conn.fetch("SELECT code, name, count FROM referrals ORDER BY name")
     await conn.close()
     return [(r["code"], r["name"], r["count"]) for r in rows]
+
 
 # -------------------- Reklama --------------------
 async def set_ad(content_type, file_id=None, text=None, caption=None):
@@ -178,6 +194,7 @@ async def set_ad(content_type, file_id=None, text=None, caption=None):
     )
     await conn.close()
 
+
 async def get_ad():
     conn = await asyncpg.connect(DATABASE_URL)
     row = await conn.fetchrow("SELECT content_type, file_id, text, caption, send_count FROM ads WHERE id = 1")
@@ -186,15 +203,20 @@ async def get_ad():
         return row
     return None
 
+
 async def remove_ad():
     conn = await asyncpg.connect(DATABASE_URL)
-    await conn.execute("UPDATE ads SET content_type='empty', file_id=NULL, text=NULL, caption=NULL, send_count=0 WHERE id=1")
+    await conn.execute(
+        "UPDATE ads SET content_type='empty', file_id=NULL, text=NULL, caption=NULL, send_count=0 WHERE id=1"
+    )
     await conn.close()
+
 
 async def increment_ad_count():
     conn = await asyncpg.connect(DATABASE_URL)
     await conn.execute("UPDATE ads SET send_count = send_count + 1 WHERE id = 1")
     await conn.close()
+
 
 # -------------------- Majburiy obuna (TUZATILGAN) --------------------
 async def get_active_mandatory_subs():
@@ -206,6 +228,7 @@ async def get_active_mandatory_subs():
     return [{"id": r["id"], "type": r["type"], "identifier": r["identifier"],
              "limit": r["limit_count"], "count": r["current_count"]} for r in rows]
 
+
 async def is_user_completed_sub(user_id: int, sub_id: int) -> bool:
     conn = await asyncpg.connect(DATABASE_URL)
     row = await conn.fetchval(
@@ -215,43 +238,47 @@ async def is_user_completed_sub(user_id: int, sub_id: int) -> bool:
     await conn.close()
     return row is not None
 
+
 async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
     """
     Foydalanuvchi obunani bajargan deb belgilaydi.
     Faqat birinchi marta bajargan foydalanuvchi hisobga olinadi.
     """
     conn = await asyncpg.connect(DATABASE_URL)
-    async with conn.transaction():
-        existing = await conn.fetchval(
-            "SELECT 1 FROM user_completed_subs WHERE user_id = $1 AND sub_id = $2",
-            user_id, sub_id
-        )
-        if existing:
-            await conn.close()
-            return False
+    try:
+        async with conn.transaction():
+            existing = await conn.fetchval(
+                "SELECT 1 FROM user_completed_subs WHERE user_id = $1 AND sub_id = $2",
+                user_id, sub_id
+            )
+            if existing:
+                return False  # Allaqachon bajargan
 
-        await conn.execute(
-            "INSERT INTO user_completed_subs (user_id, sub_id) VALUES ($1, $2)",
-            user_id, sub_id
-        )
-        await conn.execute(
-            "UPDATE mandatory_subscriptions SET current_count = current_count + 1 WHERE id = $1",
-            sub_id
-        )
-        row = await conn.fetchrow(
-            "SELECT current_count, limit_count FROM mandatory_subscriptions WHERE id = $1",
-            sub_id
-        )
-        deactivated = False
-        if row and row["current_count"] >= row["limit_count"]:
             await conn.execute(
-                "UPDATE mandatory_subscriptions SET is_active = 0 WHERE id = $1",
+                "INSERT INTO user_completed_subs (user_id, sub_id) VALUES ($1, $2)",
+                user_id, sub_id
+            )
+            await conn.execute(
+                "UPDATE mandatory_subscriptions SET current_count = current_count + 1 WHERE id = $1",
                 sub_id
             )
-            deactivated = True
-        await conn.commit()
-    await conn.close()
-    return deactivated
+
+            row = await conn.fetchrow(
+                "SELECT current_count, limit_count FROM mandatory_subscriptions WHERE id = $1",
+                sub_id
+            )
+            deactivated = False
+            if row and row["current_count"] >= row["limit_count"]:
+                await conn.execute(
+                    "UPDATE mandatory_subscriptions SET is_active = 0 WHERE id = $1",
+                    sub_id
+                )
+                deactivated = True
+            # transaction blokidan chiqishda avtomatik commit bo‘ladi
+            return deactivated
+    finally:
+        await conn.close()
+
 
 async def add_mandatory_subscription(sub_type: str, identifier: str, limit_count: int):
     conn = await asyncpg.connect(DATABASE_URL)
@@ -261,10 +288,12 @@ async def add_mandatory_subscription(sub_type: str, identifier: str, limit_count
     )
     await conn.close()
 
+
 async def remove_mandatory_subscription(sub_id: int):
     conn = await asyncpg.connect(DATABASE_URL)
     await conn.execute("DELETE FROM mandatory_subscriptions WHERE id = $1", sub_id)
     await conn.close()
+
 
 async def list_mandatory_subscriptions():
     conn = await asyncpg.connect(DATABASE_URL)
