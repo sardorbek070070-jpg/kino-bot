@@ -70,7 +70,7 @@ async def send_ad(bot, chat_id):
 
 # -------------------- Telegram kanal tekshiruvi (TUZATILGAN) --------------------
 async def check_telegram_membership(bot, user_id, chat_identifier):
-    # Agar @ bilan boshlansa, uni olib tashlaymiz (Telegram API @ ni qabul qilmaydi)
+    # Telegram API @ belgisini qabul qilmaydi, shuning uchun olib tashlaymiz
     if chat_identifier.startswith("@"):
         chat_identifier = chat_identifier[1:]
     try:
@@ -80,9 +80,8 @@ async def check_telegram_membership(bot, user_id, chat_identifier):
         print(f"Telegram membership check error: {e}")
         return False
 
-# -------------------- Majburiy obuna interfeysi --------------------
+# -------------------- Majburiy obuna interfeysi (TUZATILGAN) --------------------
 async def show_mandatory_subs(update: Update, context: CallbackContext):
-    """Foydalanuvchiga barcha bajarilmagan majburiy obunalarni ko‘rsatadi."""
     user_id = update.effective_user.id
     subs = await get_active_mandatory_subs()
     if not subs:
@@ -95,6 +94,14 @@ async def show_mandatory_subs(update: Update, context: CallbackContext):
 
     if not incomplete:
         return True
+
+    # Eski asosiy menyu xabarini o'chirish (agar mavjud bo'lsa)
+    if "main_msg_id" in context.user_data:
+        try:
+            await context.bot.delete_message(chat_id=user_id, message_id=context.user_data["main_msg_id"])
+            del context.user_data["main_msg_id"]
+        except:
+            pass
 
     text = "🎬 Botdan foydalanish uchun quyidagi kanallarga a'zo bo'lishingiz kerak:\n\n"
     url_buttons = []
@@ -111,16 +118,19 @@ async def show_mandatory_subs(update: Update, context: CallbackContext):
     confirm_button = [[InlineKeyboardButton("✅ Obunani tasdiqlash", callback_data="confirm_all_subs")]]
     reply_markup = InlineKeyboardMarkup(url_buttons + confirm_button)
 
+    # Eski majburiy obuna xabarini o'chirish
     if "mandatory_msg_id" in context.user_data:
         try:
             await context.bot.delete_message(chat_id=user_id, message_id=context.user_data["mandatory_msg_id"])
+            del context.user_data["mandatory_msg_id"]
         except:
             pass
-    sent_msg = await update.message.reply_text(text, reply_markup=reply_markup)
+
+    sent_msg = await update.effective_message.reply_text(text, reply_markup=reply_markup)
     context.user_data["mandatory_msg_id"] = sent_msg.message_id
     return False
 
-# -------------------- Callback: barcha obunalarni tasdiqlash (TUZATILGAN) --------------------
+# -------------------- Callback: barcha obunalarni tasdiqlash --------------------
 async def confirm_all_subs_callback(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
@@ -142,12 +152,10 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
         await start_after_subs(update, context)
         return
 
-    # Telegram kanallari uchun real a'zolik tekshiruvi
     failed_telegram = []
     for sub in still_incomplete:
         if sub["type"] == "telegram":
             identifier = sub["identifier"]
-            # Agar @ bo'lsa, olib tashlaymiz
             if identifier.startswith("@"):
                 identifier = identifier[1:]
             member = await check_telegram_membership(context.bot, user_id, identifier)
@@ -161,7 +169,6 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
         )
         return
 
-    # Barcha obunalarni tasdiqlash
     deactivated_any = False
     for sub in still_incomplete:
         deactivated = await mark_user_completed_sub(user_id, sub["id"])
@@ -180,38 +187,63 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
 
     await start_after_subs(update, context)
 
+# -------------------- Startdan keyingi asosiy menyu (TUZATILGAN) --------------------
 async def start_after_subs(update: Update, context: CallbackContext):
-    """Majburiy obunalar bajarilgandan keyin chaqiriladi"""
     user_id = update.effective_user.id
+
+    # Eski majburiy obuna xabarini o'chirish
+    if "mandatory_msg_id" in context.user_data:
+        try:
+            await context.bot.delete_message(chat_id=user_id, message_id=context.user_data["mandatory_msg_id"])
+            del context.user_data["mandatory_msg_id"]
+        except:
+            pass
+
+    # Eski asosiy menyu xabarini o'chirish
+    if "main_msg_id" in context.user_data:
+        try:
+            await context.bot.delete_message(chat_id=user_id, message_id=context.user_data["main_msg_id"])
+            del context.user_data["main_msg_id"]
+        except:
+            pass
+
     try:
-        if update.callback_query:
-            await update.callback_query.message.reply_text(
-                "🎬 Kino botiga xush kelibsiz!\n"
-                "📣 Kino kanalimiz: @kino_boru\n\n"
-                "Film kodini raqamlarda yuboring.\n"
-                "Admin: /admin"
-            )
-        else:
-            await update.message.reply_text(
-                "🎬 Kino botiga xush kelibsiz!\n"
-                "📣 Kino kanalimiz: @kino_boru\n\n"
-                "Film kodini raqamlarda yuboring.\n"
-                "Admin: /admin"
-            )
+        sent_msg = await update.effective_message.reply_text(
+            "🎬 Kino botiga xush kelibsiz!\n"
+            "📣 Kino kanalimiz: @kino_boru\n\n"
+            "Film kodini raqamlarda yuboring.\n"
+            "Admin: /admin"
+        )
+        context.user_data["main_msg_id"] = sent_msg.message_id
     except Exception as e:
         print(f"start_after_subs error: {e}")
-        # Agar xabar o'chirilgan bo'lsa, yangi xabar yuboramiz
-        await context.bot.send_message(
+        sent_msg = await context.bot.send_message(
             chat_id=user_id,
             text="🎬 Kino botiga xush kelibsiz!\n📣 Kino kanalimiz: @kino_boru\n\nFilm kodini raqamlarda yuboring.\nAdmin: /admin"
         )
+        context.user_data["main_msg_id"] = sent_msg.message_id
+
     await send_ad(context.bot, user_id)
 
-# -------------------- Start --------------------
+# -------------------- Start (TUZATILGAN) --------------------
 async def start(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
     referral_code = context.args[0] if context.args else None
     await register_user_start(user_id, referral_code)
+
+    # Eski xabarlarni tozalash (to'planishni oldini olish)
+    if "mandatory_msg_id" in context.user_data:
+        try:
+            await context.bot.delete_message(chat_id=user_id, message_id=context.user_data["mandatory_msg_id"])
+            del context.user_data["mandatory_msg_id"]
+        except:
+            pass
+    if "main_msg_id" in context.user_data:
+        try:
+            await context.bot.delete_message(chat_id=user_id, message_id=context.user_data["main_msg_id"])
+            del context.user_data["main_msg_id"]
+        except:
+            pass
 
     all_subs = await get_active_mandatory_subs()
     if not all_subs:
@@ -667,6 +699,8 @@ async def main():
     starlette_app = Starlette(debug=False, routes=[
         Route(WEBHOOK_PATH, webhook_handler, methods=["POST"]),
         Route("/healthcheck", healthcheck, methods=["GET"]),
+        # Root route qo'shish (health check uchun)
+        Route("/", healthcheck, methods=["GET", "HEAD"]),
     ])
 
     port = int(os.environ.get("PORT", 8080))
