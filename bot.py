@@ -139,7 +139,7 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
     if not subs:
         try:
             await query.edit_message_text("Hech qanday majburiy obuna mavjud emas.")
-        except Exception:
+        except:
             pass
         await start_after_subs(update, context)
         return
@@ -150,10 +150,9 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
             still_incomplete.append(sub)
 
     if not still_incomplete:
-        # Agar xabar o'zgarmagan bo'lsa, xatolikni ushlab o'tkazamiz
         try:
             await query.edit_message_text("Siz barcha obunalarni avval tasdiqlagansiz.")
-        except Exception:
+        except:
             pass
         await start_after_subs(update, context)
         return
@@ -183,7 +182,7 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
 
     try:
         await query.edit_message_text("✅ Tabriklaymiz! Siz barcha majburiy obunalarni bajardingiz. Endi botdan to‘liq foydalanishingiz mumkin.")
-    except Exception:
+    except:
         pass
 
     if "mandatory_msg_id" in context.user_data:
