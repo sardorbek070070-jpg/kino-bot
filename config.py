@@ -1,17 +1,3 @@
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-ADMIN_ID = os.getenv("ADMIN_ID")
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-if not BOT_TOKEN:
-    raise ValueError("BOT_TOKEN topilmadi")
-if not ADMIN_ID:
-    raise ValueError("ADMIN_ID topilmadi")
-if not DATABASE_URL:
-    raise ValueError("DATABASE_URL topilmadi")
-
-ADMIN_ID = int(ADMIN_ID)
+BOT_TOKEN = "8729235570:AAG1xPUrBK3Kc4tNyEKwZo7yy-jttv2hxyQ"
+ADMIN_ID = 2010030869          # o'z ID'ingiz
+DB_PATH = "postgresql://kino_8beg_user:0jaK2UwP2i5BHD4CgakZKWTU43cfSNnL@dpg-d85go7hkh4rs73dtrdag-a.oregon-postgres.render.com/kino_8beg"            # SQLite fayli nomi
