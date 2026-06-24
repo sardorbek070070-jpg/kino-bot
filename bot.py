@@ -68,9 +68,9 @@ async def send_ad(bot, chat_id):
     except Exception as e:
         print(f"Reklama yuborishda xatolik: {e}")
 
-# -------------------- Telegram kanal tekshiruvi (TUZATILGAN) --------------------
+# -------------------- Telegram kanal tekshiruvi --------------------
 async def check_telegram_membership(bot, user_id, chat_identifier):
-    # Telegram API @ belgisini qabul qilmaydi, shuning uchun olib tashlaymiz
+    # @ belgisini olib tashlaymiz
     if chat_identifier.startswith("@"):
         chat_identifier = chat_identifier[1:]
     try:
@@ -80,7 +80,7 @@ async def check_telegram_membership(bot, user_id, chat_identifier):
         print(f"Telegram membership check error: {e}")
         return False
 
-# -------------------- Majburiy obuna interfeysi --------------------
+# -------------------- Majburiy obuna interfeysi (qayta tekshirish qo'shilgan) --------------------
 async def show_mandatory_subs(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
     subs = await get_active_mandatory_subs()
@@ -89,7 +89,17 @@ async def show_mandatory_subs(update: Update, context: CallbackContext):
 
     incomplete = []
     for sub in subs:
-        if not await is_user_completed_sub(user_id, sub["id"]):
+        completed = await is_user_completed_sub(user_id, sub["id"])
+        if completed:
+            # Agar bajarilgan bo'lsa, kanalda a'zo ekanligini tekshiramiz
+            if sub["type"] == "telegram":
+                identifier = sub["identifier"]
+                if identifier.startswith("@"):
+                    identifier = identifier[1:]
+                member = await check_telegram_membership(context.bot, user_id, identifier)
+                if not member:
+                    incomplete.append(sub)
+        else:
             incomplete.append(sub)
 
     if not incomplete:
@@ -129,7 +139,7 @@ async def show_mandatory_subs(update: Update, context: CallbackContext):
     context.user_data["mandatory_msg_id"] = sent_msg.message_id
     return False
 
-# -------------------- Callback: barcha obunalarni tasdiqlash (TUZATILGAN) --------------------
+# -------------------- Callback: barcha obunalarni tasdiqlash (qayta tekshirish qo'shilgan) --------------------
 async def confirm_all_subs_callback(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
@@ -146,26 +156,33 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
 
     still_incomplete = []
     for sub in subs:
-        if not await is_user_completed_sub(user_id, sub["id"]):
+        completed = await is_user_completed_sub(user_id, sub["id"])
+        if completed:
+            # Agar bajarilgan bo'lsa, kanalda a'zo ekanligini tekshiramiz
+            if sub["type"] == "telegram":
+                identifier = sub["identifier"]
+                if identifier.startswith("@"):
+                    identifier = identifier[1:]
+                member = await check_telegram_membership(context.bot, user_id, identifier)
+                if not member:
+                    still_incomplete.append(sub)
+        else:
             still_incomplete.append(sub)
 
     if not still_incomplete:
         try:
-            await query.edit_message_text("Siz barcha obunalarni avval tasdiqlagansiz.")
+            await query.edit_message_text("Siz barcha obunalarni avval tasdiqlagansiz va hozirda a'zosiz.")
         except:
             pass
         await start_after_subs(update, context)
         return
 
+    # still_incomplete ichidagi telegram kanallari a'zo emas
     failed_telegram = []
     for sub in still_incomplete:
         if sub["type"] == "telegram":
-            identifier = sub["identifier"]
-            if identifier.startswith("@"):
-                identifier = identifier[1:]
-            member = await check_telegram_membership(context.bot, user_id, identifier)
-            if not member:
-                failed_telegram.append(sub["identifier"])
+            # identifier ni chiqaramiz
+            failed_telegram.append(sub["identifier"])
 
     if failed_telegram:
         await query.edit_message_text(
@@ -174,6 +191,7 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
         )
         return
 
+    # YouTube/Instagram uchun tasdiqlash (agar ular still_incomplete da bo'lsa)
     deactivated_any = False
     for sub in still_incomplete:
         deactivated = await mark_user_completed_sub(user_id, sub["id"])
@@ -255,12 +273,22 @@ async def start(update: Update, context: CallbackContext):
         await start_after_subs(update, context)
         return
 
-    completed_ids = []
+    # Har bir obunani tekshiramiz: agar bajarilgan bo'lsa va a'zo bo'lmasa, yoki bajarilmagan bo'lsa, incomplete ga qo'shamiz
+    incomplete = []
     for sub in all_subs:
-        if await is_user_completed_sub(user_id, sub["id"]):
-            completed_ids.append(sub["id"])
+        completed = await is_user_completed_sub(user_id, sub["id"])
+        if completed:
+            if sub["type"] == "telegram":
+                identifier = sub["identifier"]
+                if identifier.startswith("@"):
+                    identifier = identifier[1:]
+                member = await check_telegram_membership(context.bot, user_id, identifier)
+                if not member:
+                    incomplete.append(sub)
+        else:
+            incomplete.append(sub)
 
-    if len(completed_ids) == len(all_subs):
+    if not incomplete:
         await start_after_subs(update, context)
         return
 
@@ -586,15 +614,25 @@ async def list_mandatory(update: Update, context: CallbackContext):
         text += f"ID {id_}: {type_} {ident} | limit {limit_} | hozir {count_} | {status}\n"
     await update.message.reply_text(text)
 
-# -------------------- Kod yuborish --------------------
+# -------------------- Kod yuborish (qayta tekshirish qo'shilgan) --------------------
 async def handle_code(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
 
-    all_subs = await get_active_mandatory_subs()
-    if all_subs:
+    # Majburiy obuna tekshiruvi
+    subs = await get_active_mandatory_subs()
+    if subs:
         incomplete = []
-        for sub in all_subs:
-            if not await is_user_completed_sub(user_id, sub["id"]):
+        for sub in subs:
+            completed = await is_user_completed_sub(user_id, sub["id"])
+            if completed:
+                if sub["type"] == "telegram":
+                    identifier = sub["identifier"]
+                    if identifier.startswith("@"):
+                        identifier = identifier[1:]
+                    member = await check_telegram_membership(context.bot, user_id, identifier)
+                    if not member:
+                        incomplete.append(sub)
+            else:
                 incomplete.append(sub)
         if incomplete:
             await show_mandatory_subs(update, context)
