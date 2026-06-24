@@ -240,6 +240,10 @@ async def is_user_completed_sub(user_id: int, sub_id: int) -> bool:
 
 
 async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
+    """
+    Foydalanuvchini obunani bajargan deb belgilaydi.
+    Agar limitga yetgan bo'lsa, obunani o'chiradi (is_active=0) va True qaytaradi.
+    """
     conn = await asyncpg.connect(DATABASE_URL)
     try:
         async with conn.transaction():
@@ -271,6 +275,27 @@ async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
                 )
                 deactivated = True
             return deactivated
+    finally:
+        await conn.close()
+
+
+async def set_user_completed_sub(user_id: int, sub_id: int, completed: bool = True):
+    """
+    completed=True bo'lsa, yozuv qo'shiladi (bajarilgan deb belgilanadi).
+    completed=False bo'lsa, yozuv o'chiriladi (bajarilmagan deb qayta belgilanadi).
+    """
+    conn = await asyncpg.connect(DATABASE_URL)
+    try:
+        if completed:
+            await conn.execute(
+                "INSERT INTO user_completed_subs (user_id, sub_id) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+                user_id, sub_id
+            )
+        else:
+            await conn.execute(
+                "DELETE FROM user_completed_subs WHERE user_id = $1 AND sub_id = $2",
+                user_id, sub_id
+            )
     finally:
         await conn.close()
 
