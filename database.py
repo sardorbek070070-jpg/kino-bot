@@ -46,6 +46,28 @@ async def init_db():
         VALUES (1, 'empty', NULL, NULL, NULL, 0)
         ON CONFLICT (id) DO NOTHING
     ''')
+
+    # ========== Majburiy obuna jadvallari ==========
+    await conn.execute('''
+        CREATE TABLE IF NOT EXISTS mandatory_subscriptions (
+            id SERIAL PRIMARY KEY,
+            type TEXT NOT NULL,            -- 'telegram', 'youtube', 'instagram'
+            identifier TEXT NOT NULL,
+            limit_count INTEGER NOT NULL,
+            current_count INTEGER DEFAULT 0,
+            is_active INTEGER DEFAULT 1,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    await conn.execute('''
+        CREATE TABLE IF NOT EXISTS user_completed_subs (
+            user_id BIGINT NOT NULL,
+            sub_id INTEGER NOT NULL,
+            completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (user_id, sub_id)
+        )
+    ''')
+
     await conn.close()
 
 # ==================== Video funksiyalar ====================
@@ -184,3 +206,78 @@ async def increment_ad_count():
     conn = await asyncpg.connect(DATABASE_URL)
     await conn.execute("UPDATE ads SET send_count = send_count + 1 WHERE id = 1")
     await conn.close()
+
+# ==================== Majburiy obuna funksiyalari ====================
+async def get_active_mandatory_subs():
+    """Faol majburiy obunalar ro'yxatini qaytaradi."""
+    conn = await asyncpg.connect(DATABASE_URL)
+    rows = await conn.fetch(
+        "SELECT id, type, identifier, limit_count, current_count FROM mandatory_subscriptions WHERE is_active = 1"
+    )
+    await conn.close()
+    return [{"id": r["id"], "type": r["type"], "identifier": r["identifier"],
+             "limit": r["limit_count"], "count": r["current_count"]} for r in rows]
+
+async def is_user_completed_sub(user_id: int, sub_id: int) -> bool:
+    """Foydalanuvchi berilgan majburiy obunani bajarganmi?"""
+    conn = await asyncpg.connect(DATABASE_URL)
+    row = await conn.fetchval(
+        "SELECT 1 FROM user_completed_subs WHERE user_id = $1 AND sub_id = $2",
+        user_id, sub_id
+    )
+    await conn.close()
+    return row is not None
+
+async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
+    """Foydalanuvchini obunani bajargan deb belgilaydi.
+       Agar limitga yetgan bo'lsa, obunani o'chiradi va True qaytaradi, aks holda False."""
+    conn = await asyncpg.connect(DATABASE_URL)
+    async with conn.transaction():
+        # Insert (agar mavjud bo'lmasa)
+        await conn.execute(
+            "INSERT INTO user_completed_subs (user_id, sub_id) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+            user_id, sub_id
+        )
+        # Hisoblagichni oshirish
+        await conn.execute(
+            "UPDATE mandatory_subscriptions SET current_count = current_count + 1 WHERE id = $1",
+            sub_id
+        )
+        # Limitga yetganligini tekshirish
+        row = await conn.fetchrow(
+            "SELECT current_count, limit_count FROM mandatory_subscriptions WHERE id = $1",
+            sub_id
+        )
+        if row and row["current_count"] >= row["limit_count"]:
+            await conn.execute(
+                "UPDATE mandatory_subscriptions SET is_active = 0 WHERE id = $1",
+                sub_id
+            )
+            await conn.commit()
+            return True  # obuna o'chirildi
+    await conn.close()
+    return False  # obuna hali faol
+
+async def add_mandatory_subscription(sub_type: str, identifier: str, limit_count: int):
+    """Yangi majburiy obuna qo'shadi."""
+    conn = await asyncpg.connect(DATABASE_URL)
+    await conn.execute(
+        "INSERT INTO mandatory_subscriptions (type, identifier, limit_count) VALUES ($1, $2, $3)",
+        sub_type, identifier, limit_count
+    )
+    await conn.close()
+
+async def remove_mandatory_subscription(sub_id: int):
+    """Majburiy obunani o'chiradi."""
+    conn = await asyncpg.connect(DATABASE_URL)
+    await conn.execute("DELETE FROM mandatory_subscriptions WHERE id = $1", sub_id)
+    await conn.close()
+
+async def list_mandatory_subscriptions():
+    """Barcha majburiy obunalar ro'yxatini qaytaradi."""
+    conn = await asyncpg.connect(DATABASE_URL)
+    rows = await conn.fetch(
+        "SELECT id, type, identifier, limit_count, current_count, is_active FROM mandatory_subscriptions ORDER BY id"
+    )
+    await conn.close()
+    return rows  # rows - asyncpg.Record obyektlari ro'yxati
