@@ -50,27 +50,35 @@ WEBHOOK_URL = f"https://{RENDER_EXTERNAL_HOSTNAME}{WEBHOOK_PATH}"
 # -------------------- Yordamchi funksiyalar --------------------
 def extract_telegram_username(identifier: str) -> str:
     """Telegram identifikatoridan sof usernameni ajratib oladi."""
+    if not identifier:
+        return ""
+    # https://t.me/username yoki t.me/username
     match = re.search(r'(?:https?://)?(?:t\.me/)([a-zA-Z0-9_]+)', identifier)
     if match:
         return match.group(1)
+    # @username
     if identifier.startswith("@"):
         return identifier[1:]
+    # Agar username o'zi bo'lsa, qaytar
     return identifier
 
-async def check_telegram_membership(bot, user_id: int, chat_identifier: str) -> bool:
-    """Foydalanuvchi Telegram kanal/chat a'zoligini tekshiradi."""
+async def check_telegram_membership(bot, user_id: int, chat_identifier: str):
+    """
+    Foydalanuvchi Telegram kanal/chat a'zoligini tekshiradi.
+    Qaytadi: True - a'zo, False - a'zo emas, None - xatolik (bot kanalda emas yoki boshqa xato)
+    """
     username = extract_telegram_username(chat_identifier)
     if not username:
         logger.warning(f"Yaroqsiz Telegram identifikatori: {chat_identifier}")
-        return False
+        return None  # xatolik
     try:
         member = await bot.get_chat_member(chat_id=username, user_id=user_id)
         return member.status in ["member", "administrator", "creator"]
     except Exception as e:
-        logger.error(f"Telegram a'zolik tekshiruvi xatosi: {e}")
-        return False
+        logger.error(f"Telegram a'zolik tekshiruvi xatosi (username: {username}): {e}")
+        return None  # xatolik
 
-# -------------------- Reklama yuborish (eski reklama o'chiriladi) --------------------
+# -------------------- Reklama yuborish --------------------
 async def send_ad(bot, chat_id: int, context: CallbackContext = None):
     """Reklamani yuboradi. Eski reklama xabarini o'chiradi."""
     ad = await get_ad()
@@ -166,7 +174,7 @@ async def show_mandatory_subs(update: Update, context: CallbackContext) -> bool:
     context.user_data["mandatory_msg_id"] = sent_msg.message_id
     return False
 
-# -------------------- Callback: barcha obunalarni tasdiqlash --------------------
+# -------------------- Callback: barcha obunalarni tasdiqlash (TUZATILGAN) --------------------
 async def confirm_all_subs_callback(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
@@ -186,14 +194,35 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
         return
 
     failed = []
+    error_occurred = False
     for sub in incomplete:
         username = extract_telegram_username(sub["identifier"])
         if not username:
             failed.append(sub["identifier"])
             continue
-        member = await check_telegram_membership(context.bot, user_id, username)
-        if not member:
+        result = await check_telegram_membership(context.bot, user_id, username)
+        if result is None:
+            # Xatolik yuz berdi (bot kanalda emas yoki boshqa xato)
+            error_occurred = True
+            logger.error(f"Kanal tekshiruvi xatosi: {sub['identifier']} (user {user_id})")
+            # Davom etamiz, lekin foydalanuvchiga xabar beramiz
+        elif result is False:
             failed.append(sub["identifier"])
+
+    if error_occurred:
+        # Agar xatolik bo'lsa, foydalanuvchiga xabar beramiz
+        await query.edit_message_text(
+            "⚠️ Kanal(lar)ni tekshirishda xatolik yuz berdi. Iltimos, keyinroq qayta urining yoki admin bilan bog'laning.\n"
+            "Xatolik sabablari: bot kanalga admin qilinmagan yoki kanal identifikatori noto'g'ri."
+        )
+        # Adminni xabardor qilamiz
+        await context.bot.send_message(
+            chat_id=ADMIN_ID,
+            text=f"🚨 Obunani tasdiqlashda xatolik! Foydalanuvchi: {user_id}\n"
+                 f"Kanal(lar): {[sub['identifier'] for sub in incomplete]}\n"
+                 "Bot kanalga admin qilinganligini tekshiring."
+        )
+        return
 
     if failed:
         await query.edit_message_text(
@@ -219,7 +248,7 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
 
     await start_after_subs(update, context)
 
-# -------------------- Startdan keyingi asosiy menyu (TAHRIRLANADI) --------------------
+# -------------------- Startdan keyingi asosiy menyu --------------------
 async def start_after_subs(update: Update, context: CallbackContext):
     """Asosiy menyuni ko'rsatadi, eski xabarni tahrirlaydi yoki yangisini yuboradi."""
     user_id = update.effective_user.id
@@ -233,7 +262,6 @@ async def start_after_subs(update: Update, context: CallbackContext):
         except Exception:
             pass
 
-    # Asosiy menyu matni
     text = (
         "🎬 Kino botiga xush kelibsiz!\n"
         "📣 Kino kanalimiz: @kino_boru\n\n"
@@ -241,7 +269,6 @@ async def start_after_subs(update: Update, context: CallbackContext):
         "Admin: /admin"
     )
 
-    # Eski asosiy menyu xabarini tahrirlash yoki yangi yuborish
     main_id = context.user_data.get("main_msg_id")
     if main_id:
         try:
@@ -261,7 +288,6 @@ async def start_after_subs(update: Update, context: CallbackContext):
         sent_msg = await context.bot.send_message(chat_id=chat_id, text=text)
         context.user_data["main_msg_id"] = sent_msg.message_id
 
-    # Reklama yuborish (eski reklama xabarini o'chiradi)
     await send_ad(context.bot, user_id, context)
 
 # -------------------- Start --------------------
@@ -684,7 +710,7 @@ async def handle_code(update: Update, context: CallbackContext):
     else:
         await update.message.reply_text(f"❌ {text} kodli video topilmadi.")
 
-# -------------------- Webhook handlerlar (main dan oldin) --------------------
+# -------------------- Webhook handlerlar --------------------
 async def webhook_handler(request: Request):
     data = await request.json()
     update = Update.de_json(data, bot_application.bot)
