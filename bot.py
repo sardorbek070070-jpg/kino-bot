@@ -114,28 +114,43 @@ async def show_mandatory_subs(update: Update, context: CallbackContext):
     context.user_data["mandatory_msg_id"] = sent_msg.message_id
     return False
 
-# --- Majburiy obunani real vaqtda tekshirish ---
+# --- Majburiy obunani real vaqtda tekshirish (PARALLEL) ---
 async def check_and_handle_mandatory_subs(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
     subs = await get_active_mandatory_subs()
     if not subs:
         return False
 
-    incomplete = []
-    for sub in subs:
+    # Barcha tekshiruvlarni parallel bajarish uchun vazifalar
+    async def check_sub(sub):
         if sub["type"] == "telegram":
             identifier = sub["identifier"]
             if not identifier.startswith("@"):
                 identifier = "@" + identifier
             is_member = await check_telegram_membership(context.bot, user_id, identifier)
-            if not is_member:
+            return (sub, is_member)
+        else:
+            # YouTube/Instagram uchun bazadagi holat
+            is_completed = await is_user_completed_sub(user_id, sub["id"])
+            return (sub, is_completed)
+
+    # Barcha tekshiruvlarni parallel ishga tushiramiz
+    results = await asyncio.gather(*[check_sub(sub) for sub in subs])
+
+    incomplete = []
+    for sub, is_ok in results:
+        if sub["type"] == "telegram":
+            if not is_ok:
+                # A'zo emas -> completed yozuvini o'chiramiz
                 await set_user_completed_sub(user_id, sub["id"], False)
                 incomplete.append(sub)
             else:
+                # A'zo -> completed yozuvi borligiga ishonch hosil qilamiz
                 if not await is_user_completed_sub(user_id, sub["id"]):
                     await set_user_completed_sub(user_id, sub["id"], True)
         else:
-            if not await is_user_completed_sub(user_id, sub["id"]):
+            # YouTube/Instagram uchun is_ok bu completed holati
+            if not is_ok:
                 incomplete.append(sub)
 
     if incomplete:
@@ -151,7 +166,6 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
 
     subs = await get_active_mandatory_subs()
     if not subs:
-        # Xabarni faqat o'zgargan bo'lsa tahrirlaymiz
         if query.message.text != "Hech qanday majburiy obuna mavjud emas.":
             await query.edit_message_text("Hech qanday majburiy obuna mavjud emas.")
         await start_after_subs(update, context)
@@ -168,15 +182,21 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
         await start_after_subs(update, context)
         return
 
+    # Telegram kanallarini parallel tekshirish
+    async def check_telegram_sub(sub):
+        identifier = sub["identifier"]
+        if not identifier.startswith("@"):
+            identifier = "@" + identifier
+        is_member = await check_telegram_membership(context.bot, user_id, identifier)
+        return (sub, is_member)
+
+    telegram_subs = [sub for sub in still_incomplete if sub["type"] == "telegram"]
+    results = await asyncio.gather(*[check_telegram_sub(sub) for sub in telegram_subs])
+
     failed_telegram = []
-    for sub in still_incomplete:
-        if sub["type"] == "telegram":
-            identifier = sub["identifier"]
-            if not identifier.startswith("@"):
-                identifier = "@" + identifier
-            member = await check_telegram_membership(context.bot, user_id, identifier)
-            if not member:
-                failed_telegram.append(identifier)
+    for sub, is_member in results:
+        if not is_member:
+            failed_telegram.append(sub["identifier"])
 
     if failed_telegram:
         msg_text = (
@@ -187,6 +207,7 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
             await query.edit_message_text(msg_text)
         return
 
+    # YouTube/Instagram uchun hech qanday tekshiruv yo'q, faqat tasdiqlash
     deactivated_any = False
     for sub in still_incomplete:
         deactivated = await mark_user_completed_sub(user_id, sub["id"])
@@ -213,7 +234,8 @@ async def start_after_subs(update: Update, context: CallbackContext):
         "Film kodini raqamlarda yuboring.\n"
         "Admin: /admin"
     )
-    await send_ad(context.bot, user_id)
+    # Reklamani bloklamasdan yuborish
+    asyncio.create_task(send_ad(context.bot, user_id))
 
 # -------------------- Start (faqat private) --------------------
 async def start(update: Update, context: CallbackContext):
@@ -610,7 +632,6 @@ async def main():
     bot_application.add_handler(CommandHandler("list_mandatory", list_mandatory, filters=private_filter))
     bot_application.add_handler(CallbackQueryHandler(confirm_all_subs_callback, pattern="^confirm_all_subs$"))
 
-    # ConversationHandler – filters parametrini olib tashladik
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("addvideo", addvideo_start, filters=private_filter)],
         states={
