@@ -192,7 +192,6 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
     if "mandatory_msg_id" in context.user_data:
         del context.user_data["mandatory_msg_id"]
 
-    # Admin guruhiga xabar yuborish olib tashlandi
     await start_after_subs(update, context)
 
 async def start_after_subs(update: Update, context: CallbackContext):
@@ -587,9 +586,9 @@ async def main():
     await init_db()
     bot_application = Application.builder().token(BOT_TOKEN).build()
 
-    # -------------------- Barcha handlerlar faqat PRIVATE chat uchun --------------------
     private_filter = filters.ChatType.PRIVATE
 
+    # -------------------- Komandalar --------------------
     bot_application.add_handler(CommandHandler("start", start, filters=private_filter))
     bot_application.add_handler(CommandHandler("admin", admin, filters=private_filter))
     bot_application.add_handler(CommandHandler("stats", stats, filters=private_filter))
@@ -599,13 +598,12 @@ async def main():
     bot_application.add_handler(CommandHandler("removead", removead, filters=private_filter))
     bot_application.add_handler(CommandHandler("adstats", adstats, filters=private_filter))
     bot_application.add_handler(CommandHandler("cancel", cancel, filters=private_filter))
-
     bot_application.add_handler(CommandHandler("add_mandatory", add_mandatory, filters=private_filter))
     bot_application.add_handler(CommandHandler("remove_mandatory", remove_mandatory, filters=private_filter))
     bot_application.add_handler(CommandHandler("list_mandatory", list_mandatory, filters=private_filter))
     bot_application.add_handler(CallbackQueryHandler(confirm_all_subs_callback, pattern="^confirm_all_subs$"))
 
-    # Conversation: addvideo
+    # -------------------- ConversationHandler: addvideo --------------------
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("addvideo", addvideo_start, filters=private_filter)],
         states={
@@ -616,45 +614,41 @@ async def main():
                 MessageHandler(filters.TEXT & ~filters.COMMAND & private_filter, addvideo_description)
             ]
         },
-        fallbacks=[CommandHandler("cancel", cancel, filters=private_filter)],
-        filters=private_filter  # butun conversation private da
+        fallbacks=[CommandHandler("cancel", cancel, filters=private_filter)]
     )
     bot_application.add_handler(conv_handler)
 
-    # Conversation: broadcast
+    # -------------------- ConversationHandler: broadcast --------------------
     broadcast_conv = ConversationHandler(
         entry_points=[CommandHandler("broadcast", broadcast_start, filters=private_filter)],
         states={
             WAITING_BROADCAST: [MessageHandler(filters.ALL & ~filters.COMMAND & private_filter, broadcast_send)]
         },
-        fallbacks=[CommandHandler("cancel", cancel, filters=private_filter)],
-        filters=private_filter
+        fallbacks=[CommandHandler("cancel", cancel, filters=private_filter)]
     )
     bot_application.add_handler(broadcast_conv)
 
-    # Conversation: createref
+    # -------------------- ConversationHandler: createref --------------------
     ref_conv = ConversationHandler(
         entry_points=[CommandHandler("createref", createref_start, filters=private_filter)],
         states={
             WAITING_REF_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND & private_filter, createref_get_name)]
         },
-        fallbacks=[CommandHandler("cancel", cancel, filters=private_filter)],
-        filters=private_filter
+        fallbacks=[CommandHandler("cancel", cancel, filters=private_filter)]
     )
     bot_application.add_handler(ref_conv)
 
-    # Conversation: setad
+    # -------------------- ConversationHandler: setad --------------------
     ad_conv = ConversationHandler(
         entry_points=[CommandHandler("setad", setad_start, filters=private_filter)],
         states={
             WAITING_AD_CONTENT: [MessageHandler(filters.ALL & ~filters.COMMAND & private_filter, setad_get_content)]
         },
-        fallbacks=[CommandHandler("cancel", cancel, filters=private_filter)],
-        filters=private_filter
+        fallbacks=[CommandHandler("cancel", cancel, filters=private_filter)]
     )
     bot_application.add_handler(ad_conv)
 
-    # Kod qabul qilish faqat private da
+    # -------------------- Kod qabul qilish --------------------
     bot_application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND & private_filter, handle_code))
 
     await bot_application.initialize()
