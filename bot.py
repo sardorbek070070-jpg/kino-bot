@@ -151,7 +151,9 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
 
     subs = await get_active_mandatory_subs()
     if not subs:
-        await query.edit_message_text("Hech qanday majburiy obuna mavjud emas.")
+        # Xabarni faqat o'zgargan bo'lsa tahrirlaymiz
+        if query.message.text != "Hech qanday majburiy obuna mavjud emas.":
+            await query.edit_message_text("Hech qanday majburiy obuna mavjud emas.")
         await start_after_subs(update, context)
         return
 
@@ -161,7 +163,8 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
             still_incomplete.append(sub)
 
     if not still_incomplete:
-        await query.edit_message_text("Siz barcha obunalarni avval tasdiqlagansiz.")
+        if query.message.text != "Siz barcha obunalarni avval tasdiqlagansiz.":
+            await query.edit_message_text("Siz barcha obunalarni avval tasdiqlagansiz.")
         await start_after_subs(update, context)
         return
 
@@ -176,10 +179,12 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
                 failed_telegram.append(identifier)
 
     if failed_telegram:
-        await query.edit_message_text(
+        msg_text = (
             f"❌ Siz quyidagi Telegram kanal(lar)ga a'zo emassiz:\n" + "\n".join(failed_telegram) +
             "\n\nIltimos, a'zo bo'ling va qayta urining."
         )
+        if query.message.text != msg_text:
+            await query.edit_message_text(msg_text)
         return
 
     deactivated_any = False
@@ -188,7 +193,9 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
         if deactivated:
             deactivated_any = True
 
-    await query.edit_message_text("✅ Tabriklaymiz! Siz barcha majburiy obunalarni bajardingiz. Endi botdan to‘liq foydalanishingiz mumkin.")
+    success_text = "✅ Tabriklaymiz! Siz barcha majburiy obunalarni bajardingiz. Endi botdan to‘liq foydalanishingiz mumkin."
+    if query.message.text != success_text:
+        await query.edit_message_text(success_text)
     if "mandatory_msg_id" in context.user_data:
         del context.user_data["mandatory_msg_id"]
 
@@ -219,7 +226,7 @@ async def start(update: Update, context: CallbackContext):
 
     await start_after_subs(update, context)
 
-# -------------------- Admin panel (faqat private) --------------------
+# -------------------- Admin panel --------------------
 async def admin(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Siz admin emassiz!")
@@ -588,7 +595,6 @@ async def main():
 
     private_filter = filters.ChatType.PRIVATE
 
-    # -------------------- Komandalar --------------------
     bot_application.add_handler(CommandHandler("start", start, filters=private_filter))
     bot_application.add_handler(CommandHandler("admin", admin, filters=private_filter))
     bot_application.add_handler(CommandHandler("stats", stats, filters=private_filter))
@@ -598,12 +604,13 @@ async def main():
     bot_application.add_handler(CommandHandler("removead", removead, filters=private_filter))
     bot_application.add_handler(CommandHandler("adstats", adstats, filters=private_filter))
     bot_application.add_handler(CommandHandler("cancel", cancel, filters=private_filter))
+
     bot_application.add_handler(CommandHandler("add_mandatory", add_mandatory, filters=private_filter))
     bot_application.add_handler(CommandHandler("remove_mandatory", remove_mandatory, filters=private_filter))
     bot_application.add_handler(CommandHandler("list_mandatory", list_mandatory, filters=private_filter))
     bot_application.add_handler(CallbackQueryHandler(confirm_all_subs_callback, pattern="^confirm_all_subs$"))
 
-    # -------------------- ConversationHandler: addvideo --------------------
+    # ConversationHandler – filters parametrini olib tashladik
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("addvideo", addvideo_start, filters=private_filter)],
         states={
@@ -618,7 +625,6 @@ async def main():
     )
     bot_application.add_handler(conv_handler)
 
-    # -------------------- ConversationHandler: broadcast --------------------
     broadcast_conv = ConversationHandler(
         entry_points=[CommandHandler("broadcast", broadcast_start, filters=private_filter)],
         states={
@@ -628,7 +634,6 @@ async def main():
     )
     bot_application.add_handler(broadcast_conv)
 
-    # -------------------- ConversationHandler: createref --------------------
     ref_conv = ConversationHandler(
         entry_points=[CommandHandler("createref", createref_start, filters=private_filter)],
         states={
@@ -638,7 +643,6 @@ async def main():
     )
     bot_application.add_handler(ref_conv)
 
-    # -------------------- ConversationHandler: setad --------------------
     ad_conv = ConversationHandler(
         entry_points=[CommandHandler("setad", setad_start, filters=private_filter)],
         states={
@@ -648,7 +652,6 @@ async def main():
     )
     bot_application.add_handler(ad_conv)
 
-    # -------------------- Kod qabul qilish --------------------
     bot_application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND & private_filter, handle_code))
 
     await bot_application.initialize()
