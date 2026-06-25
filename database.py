@@ -240,6 +240,11 @@ async def is_user_completed_sub(user_id: int, sub_id: int) -> bool:
 
 
 async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
+    """
+    Foydalanuvchi birinchi marta obunani tasdiqlaganda current_count +1 oshiradi.
+    Agar allaqachon tasdiqlagan bo'lsa, hech narsa qilmaydi.
+    Qaytaradi: agar limitga yetib, obuna o'chirilgan bo'lsa True, aks holda False.
+    """
     conn = await asyncpg.connect(DATABASE_URL)
     try:
         async with conn.transaction():
@@ -275,11 +280,11 @@ async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
         await conn.close()
 
 
-# Yangi funksiya: completed holatini o'rnatish (true yoki false)
 async def set_user_completed_sub(user_id: int, sub_id: int, completed: bool = True):
     """
-    Agar completed=True bo'lsa, yozuv qo'shiladi (bajarilgan deb belgilanadi).
-    Agar completed=False bo'lsa, yozuv o'chiriladi (bajarilmagan deb qayta belgilanadi).
+    Faqat user_completed_subs jadvalini yangilaydi, current_count ga tegmaydi.
+    completed=True -> yozuv qo'shadi (agar mavjud bo'lmasa)
+    completed=False -> yozuvni o'chiradi (agar mavjud bo'lsa)
     """
     conn = await asyncpg.connect(DATABASE_URL)
     try:
