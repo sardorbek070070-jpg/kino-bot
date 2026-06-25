@@ -1,6 +1,7 @@
 import os
 import asyncio
 import secrets
+import time
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
@@ -114,11 +115,28 @@ async def show_mandatory_subs(update: Update, context: CallbackContext):
     context.user_data["mandatory_msg_id"] = sent_msg.message_id
     return False
 
-# --- Majburiy obunani real vaqtda tekshirish (PARALLEL) ---
+# --- Majburiy obunani real vaqtda tekshirish (PARALLEL + CACHE) ---
 async def check_and_handle_mandatory_subs(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
+
+    # Keshlash: 30 soniya davomida qayta tekshirmaymiz
+    cache_key = "sub_check_cache"
+    cache_time_key = "sub_check_time"
+    current_time = time.time()
+
+    if cache_time_key in context.user_data:
+        if current_time - context.user_data[cache_time_key] < 30:
+            # Keshlangan natijalarni ishlatamiz
+            if context.user_data.get(cache_key, False):
+                # Agar oldingi tekshiruvda incomplete bo'lgan bo'lsa, majburiy obuna ekranini ko'rsatamiz
+                await show_mandatory_subs(update, context)
+                return True
+            return False
+
     subs = await get_active_mandatory_subs()
     if not subs:
+        context.user_data[cache_key] = False
+        context.user_data[cache_time_key] = current_time
         return False
 
     # Barcha tekshiruvlarni parallel bajarish uchun vazifalar
@@ -130,33 +148,33 @@ async def check_and_handle_mandatory_subs(update: Update, context: CallbackConte
             is_member = await check_telegram_membership(context.bot, user_id, identifier)
             return (sub, is_member)
         else:
-            # YouTube/Instagram uchun bazadagi holat
             is_completed = await is_user_completed_sub(user_id, sub["id"])
             return (sub, is_completed)
 
-    # Barcha tekshiruvlarni parallel ishga tushiramiz
     results = await asyncio.gather(*[check_sub(sub) for sub in subs])
 
     incomplete = []
     for sub, is_ok in results:
         if sub["type"] == "telegram":
             if not is_ok:
-                # A'zo emas -> completed yozuvini o'chiramiz
                 await set_user_completed_sub(user_id, sub["id"], False)
                 incomplete.append(sub)
             else:
-                # A'zo -> completed yozuvi borligiga ishonch hosil qilamiz
                 if not await is_user_completed_sub(user_id, sub["id"]):
                     await set_user_completed_sub(user_id, sub["id"], True)
         else:
-            # YouTube/Instagram uchun is_ok bu completed holati
             if not is_ok:
                 incomplete.append(sub)
 
+    # Keshga saqlaymiz
+    context.user_data[cache_time_key] = current_time
     if incomplete:
+        context.user_data[cache_key] = True
         await show_mandatory_subs(update, context)
         return True
-    return False
+    else:
+        context.user_data[cache_key] = False
+        return False
 
 # -------------------- Callback: barcha obunalarni tasdiqlash --------------------
 async def confirm_all_subs_callback(update: Update, context: CallbackContext):
@@ -207,7 +225,6 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
             await query.edit_message_text(msg_text)
         return
 
-    # YouTube/Instagram uchun hech qanday tekshiruv yo'q, faqat tasdiqlash
     deactivated_any = False
     for sub in still_incomplete:
         deactivated = await mark_user_completed_sub(user_id, sub["id"])
@@ -234,7 +251,6 @@ async def start_after_subs(update: Update, context: CallbackContext):
         "Film kodini raqamlarda yuboring.\n"
         "Admin: /admin"
     )
-    # Reklamani bloklamasdan yuborish
     asyncio.create_task(send_ad(context.bot, user_id))
 
 # -------------------- Start (faqat private) --------------------
