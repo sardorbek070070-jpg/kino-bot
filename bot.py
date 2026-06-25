@@ -115,7 +115,7 @@ async def show_mandatory_subs(update: Update, context: CallbackContext):
     context.user_data["mandatory_msg_id"] = sent_msg.message_id
     return False
 
-# --- Majburiy obunani real vaqtda tekshirish (PARALLEL + CACHE) ---
+# --- Majburiy obunani real vaqtda tekshirish (PARALLEL + CACHE + VARIANT B) ---
 async def check_and_handle_mandatory_subs(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
 
@@ -126,9 +126,7 @@ async def check_and_handle_mandatory_subs(update: Update, context: CallbackConte
 
     if cache_time_key in context.user_data:
         if current_time - context.user_data[cache_time_key] < 30:
-            # Keshlangan natijalarni ishlatamiz
             if context.user_data.get(cache_key, False):
-                # Agar oldingi tekshiruvda incomplete bo'lgan bo'lsa, majburiy obuna ekranini ko'rsatamiz
                 await show_mandatory_subs(update, context)
                 return True
             return False
@@ -139,7 +137,7 @@ async def check_and_handle_mandatory_subs(update: Update, context: CallbackConte
         context.user_data[cache_time_key] = current_time
         return False
 
-    # Barcha tekshiruvlarni parallel bajarish uchun vazifalar
+    # Barcha tekshiruvlarni parallel bajarish
     async def check_sub(sub):
         if sub["type"] == "telegram":
             identifier = sub["identifier"]
@@ -157,11 +155,14 @@ async def check_and_handle_mandatory_subs(update: Update, context: CallbackConte
     for sub, is_ok in results:
         if sub["type"] == "telegram":
             if not is_ok:
+                # A'zo emas -> completed yozuvini o'chiramiz
                 await set_user_completed_sub(user_id, sub["id"], False)
                 incomplete.append(sub)
             else:
+                # A'zo -> agar yozuv bo'lmasa, birinchi marta hisoblaymiz (Variant B)
                 if not await is_user_completed_sub(user_id, sub["id"]):
-                    await set_user_completed_sub(user_id, sub["id"], True)
+                    # Birinchi marta a'zo bo'lish -> count oshiramiz
+                    await mark_user_completed_sub(user_id, sub["id"])
         else:
             if not is_ok:
                 incomplete.append(sub)
@@ -565,6 +566,7 @@ async def remove_mandatory(update: Update, context: CallbackContext):
     await remove_mandatory_subscription(sub_id)
     await update.message.reply_text(f"✅ ID {sub_id} o‘chirildi.")
 
+# -------------------- Yangilangan list_mandatory (kanal real a'zolari soni bilan) --------------------
 async def list_mandatory(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         return
@@ -572,16 +574,46 @@ async def list_mandatory(update: Update, context: CallbackContext):
     if not rows:
         await update.message.reply_text("Hech qanday majburiy obuna yo‘q.")
         return
-    text = "📋 Majburiy obunalar:\n"
+
+    # Telegram kanallari uchun haqiqiy a'zolar sonini parallel olish
+    async def get_actual_count(identifier):
+        try:
+            chat_id = identifier
+            if chat_id.startswith("@"):
+                chat_id = chat_id[1:]
+            elif chat_id.startswith("https://t.me/"):
+                chat_id = chat_id.split("/")[-1]
+            chat = await context.bot.get_chat(chat_id)
+            return chat.member_count
+        except Exception as e:
+            print(f"Kanal a'zolarini olishda xatolik: {e}")
+            return None
+
+    tasks = []
     for row in rows:
+        if row["type"] == "telegram":
+            tasks.append(get_actual_count(row["identifier"]))
+        else:
+            tasks.append(asyncio.sleep(0, result=None))
+
+    actual_counts = await asyncio.gather(*tasks)
+
+    text = "📋 Majburiy obunalar (kanaldagi haqiqiy a'zolar soni):\n"
+    for idx, row in enumerate(rows):
         id_ = row["id"]
         type_ = row["type"]
         ident = row["identifier"]
         limit_ = row["limit_count"]
-        count_ = row["current_count"]
         active_ = row["is_active"]
         status = "✅ faol" if active_ else "❌ faol emas"
-        text += f"ID {id_}: {type_} {ident} | limit {limit_} | hozir {count_} | {status}\n"
+
+        if type_ == "telegram":
+            actual = actual_counts[idx] if actual_counts[idx] is not None else row["current_count"]
+        else:
+            actual = row["current_count"]  # YouTube/Instagram uchun eski count
+
+        text += f"ID {id_}: {type_} {ident} | limit {limit_} | a'zolar: {actual} | {status}\n"
+
     await update.message.reply_text(text)
 
 # -------------------- Kod yuborish (faqat private) --------------------
