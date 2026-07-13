@@ -17,7 +17,7 @@ from config import BOT_TOKEN, ADMIN_ID
 from database import (
     init_db, add_video, get_video, delete_video, list_all_videos,
     register_user_start, get_total_users, get_today_users,
-    get_week_users, get_active_users_last_24h,
+    get_week_users, get_active_users_last_24h, update_user_activity,
     get_all_user_ids, create_referral, check_referral_code, get_all_referrals,
     set_ad, get_ad, remove_ad, increment_ad_count,
     get_active_mandatory_subs, is_user_completed_sub, mark_user_completed_sub,
@@ -182,6 +182,7 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
     user_id = update.effective_user.id
+    await update_user_activity(user_id)  # Faollikni yangilash
 
     subs = await get_active_mandatory_subs()
     if not subs:
@@ -257,6 +258,8 @@ async def start_after_subs(update: Update, context: CallbackContext):
 # -------------------- Start (faqat private) --------------------
 async def start(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
+    await update_user_activity(user_id)  # Faollikni yangilash
+
     referral_code = context.args[0] if context.args else None
     await register_user_start(user_id, referral_code)
 
@@ -301,8 +304,8 @@ async def stats(update: Update, context: CallbackContext):
     await update.message.reply_text(
         f"📊 Statistika\n\n"
         f"👥 Umumiy: {total}\n"
-        f"🆕 Bugun: {today}\n"
-        f"📅 7 kunda: {week}\n"
+        f"🆕 Bugun faol: {today}\n"
+        f"📅 7 kunda faol: {week}\n"
         f"🟢 24 soatda faol: {active}"
     )
 
@@ -566,7 +569,6 @@ async def remove_mandatory(update: Update, context: CallbackContext):
     await remove_mandatory_subscription(sub_id)
     await update.message.reply_text(f"✅ ID {sub_id} o‘chirildi.")
 
-# -------------------- Yangilangan list_mandatory (kanal real a'zolari soni bilan) --------------------
 async def list_mandatory(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         return
@@ -575,50 +577,23 @@ async def list_mandatory(update: Update, context: CallbackContext):
         await update.message.reply_text("Hech qanday majburiy obuna yo‘q.")
         return
 
-    # Telegram kanallari uchun haqiqiy a'zolar sonini parallel olish
-    async def get_actual_count(identifier):
-        try:
-            chat_id = identifier
-            if chat_id.startswith("@"):
-                chat_id = chat_id[1:]
-            elif chat_id.startswith("https://t.me/"):
-                chat_id = chat_id.split("/")[-1]
-            chat = await context.bot.get_chat(chat_id)
-            return chat.member_count
-        except Exception as e:
-            print(f"Kanal a'zolarini olishda xatolik: {e}")
-            return None
-
-    tasks = []
+    text = "📋 Majburiy obunalar:\n"
     for row in rows:
-        if row["type"] == "telegram":
-            tasks.append(get_actual_count(row["identifier"]))
-        else:
-            tasks.append(asyncio.sleep(0, result=None))
-
-    actual_counts = await asyncio.gather(*tasks)
-
-    text = "📋 Majburiy obunalar (kanaldagi haqiqiy a'zolar soni):\n"
-    for idx, row in enumerate(rows):
         id_ = row["id"]
         type_ = row["type"]
         ident = row["identifier"]
         limit_ = row["limit_count"]
+        current_ = row["current_count"]
         active_ = row["is_active"]
         status = "✅ faol" if active_ else "❌ faol emas"
-
-        if type_ == "telegram":
-            actual = actual_counts[idx] if actual_counts[idx] is not None else row["current_count"]
-        else:
-            actual = row["current_count"]  # YouTube/Instagram uchun eski count
-
-        text += f"ID {id_}: {type_} {ident} | limit {limit_} | a'zolar: {actual} | {status}\n"
+        text += f"ID {id_}: {type_} {ident} | limit {limit_} | a'zolar: {current_} | {status}\n"
 
     await update.message.reply_text(text)
 
 # -------------------- Kod yuborish (faqat private) --------------------
 async def handle_code(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
+    await update_user_activity(user_id)  # Faollikni yangilash
 
     if await check_and_handle_mandatory_subs(update, context):
         return
