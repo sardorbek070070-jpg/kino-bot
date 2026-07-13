@@ -4,7 +4,7 @@ from config import DATABASE_URL
 async def init_db():
     conn = await asyncpg.connect(DATABASE_URL)
 
-    # ----- Foydalanuvchilar -----
+    # ----- Foydalanuvchilar (last_activity bilan) -----
     await conn.execute('''
         CREATE TABLE IF NOT EXISTS users (
             user_id BIGINT PRIMARY KEY,
@@ -73,14 +73,14 @@ async def init_db():
     await conn.close()
 
 
-# -------------------- Foydalanuvchi --------------------
+# ==================== FOYDALANUVCHI ====================
 async def register_user_start(user_id, referral_code=None):
     conn = await asyncpg.connect(DATABASE_URL)
     async with conn.transaction():
         exists = await conn.fetchval("SELECT 1 FROM users WHERE user_id = $1", user_id)
         if not exists:
             await conn.execute(
-                "INSERT INTO users (user_id, referred_by) VALUES ($1, $2)",
+                "INSERT INTO users (user_id, referred_by, last_activity) VALUES ($1, $2, CURRENT_TIMESTAMP)",
                 user_id, referral_code
             )
             if referral_code:
@@ -96,6 +96,18 @@ async def register_user_start(user_id, referral_code=None):
     await conn.close()
 
 
+async def update_user_activity(user_id: int):
+    """Foydalanuvchi faolligini yangilaydi (har bir so'rovda chaqiriladi)"""
+    conn = await asyncpg.connect(DATABASE_URL)
+    try:
+        await conn.execute(
+            "UPDATE users SET last_activity = CURRENT_TIMESTAMP WHERE user_id = $1",
+            user_id
+        )
+    finally:
+        await conn.close()
+
+
 async def get_total_users():
     conn = await asyncpg.connect(DATABASE_URL)
     count = await conn.fetchval("SELECT COUNT(*) FROM users")
@@ -104,20 +116,27 @@ async def get_total_users():
 
 
 async def get_today_users():
+    """Bugun botga xabar yozgan foydalanuvchilar (last_activity bo'yicha)"""
     conn = await asyncpg.connect(DATABASE_URL)
-    count = await conn.fetchval("SELECT COUNT(*) FROM users WHERE DATE(first_start) = CURRENT_DATE")
+    count = await conn.fetchval(
+        "SELECT COUNT(*) FROM users WHERE DATE(last_activity) = CURRENT_DATE"
+    )
     await conn.close()
     return count
 
 
 async def get_week_users():
+    """So'nggi 7 kun ichida faol bo'lgan foydalanuvchilar"""
     conn = await asyncpg.connect(DATABASE_URL)
-    count = await conn.fetchval("SELECT COUNT(*) FROM users WHERE first_start >= CURRENT_DATE - INTERVAL '7 days'")
+    count = await conn.fetchval(
+        "SELECT COUNT(*) FROM users WHERE last_activity >= CURRENT_DATE - INTERVAL '7 days'"
+    )
     await conn.close()
     return count
 
 
 async def get_active_users_last_24h():
+    """So'nggi 24 soat ichida faol bo'lgan foydalanuvchilar"""
     conn = await asyncpg.connect(DATABASE_URL)
     count = await conn.fetchval(
         "SELECT COUNT(*) FROM users WHERE last_activity >= CURRENT_TIMESTAMP - INTERVAL '1 day'"
@@ -133,7 +152,7 @@ async def get_all_user_ids():
     return [r["user_id"] for r in rows]
 
 
-# -------------------- Video funksiyalari --------------------
+# ==================== VIDEOLAR ====================
 async def add_video(code: str, file_id: str, description: str = ""):
     conn = await asyncpg.connect(DATABASE_URL)
     await conn.execute(
@@ -163,7 +182,7 @@ async def list_all_videos():
     return [(r["code"], r["description"]) for r in rows]
 
 
-# -------------------- Referallar --------------------
+# ==================== REFERALLAR ====================
 async def create_referral(name, code):
     conn = await asyncpg.connect(DATABASE_URL)
     await conn.execute("INSERT INTO referrals (code, name) VALUES ($1, $2)", code, name)
@@ -184,7 +203,7 @@ async def get_all_referrals():
     return [(r["code"], r["name"], r["count"]) for r in rows]
 
 
-# -------------------- Reklama --------------------
+# ==================== REKLAMA ====================
 async def set_ad(content_type, file_id=None, text=None, caption=None):
     conn = await asyncpg.connect(DATABASE_URL)
     await conn.execute("DELETE FROM ads WHERE id = 1")
@@ -218,7 +237,7 @@ async def increment_ad_count():
     await conn.close()
 
 
-# -------------------- Majburiy obuna --------------------
+# ==================== MAJBURIY OBUNA ====================
 async def get_active_mandatory_subs():
     conn = await asyncpg.connect(DATABASE_URL)
     rows = await conn.fetch(
@@ -253,7 +272,7 @@ async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
                 user_id, sub_id
             )
             if existing:
-                return False  # Allaqachon bajarilgan – hisoblanmaydi
+                return False
 
             await conn.execute(
                 "INSERT INTO user_completed_subs (user_id, sub_id) VALUES ($1, $2)",
