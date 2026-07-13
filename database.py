@@ -4,7 +4,7 @@ from config import DATABASE_URL
 async def init_db():
     conn = await asyncpg.connect(DATABASE_URL)
 
-    # ----- Foydalanuvchilar (to'g'ri ustunlar bilan) -----
+    # ----- Foydalanuvchilar -----
     await conn.execute('''
         CREATE TABLE IF NOT EXISTS users (
             user_id BIGINT PRIMARY KEY,
@@ -97,6 +97,8 @@ async def register_user_start(user_id, referral_code=None):
                     "UPDATE users SET last_activity = CURRENT_TIMESTAMP WHERE user_id = $1",
                     user_id
                 )
+    except Exception as e:
+        print(f"register_user_start xatosi: {e}")
     finally:
         await conn.close()
 
@@ -107,7 +109,6 @@ async def update_user_activity(user_id: int):
         return
     conn = await asyncpg.connect(DATABASE_URL)
     try:
-        # Avval foydalanuvchi mavjudligini tekshiramiz
         exists = await conn.fetchval("SELECT 1 FROM users WHERE user_id = $1", user_id)
         if exists:
             await conn.execute(
@@ -115,7 +116,6 @@ async def update_user_activity(user_id: int):
                 user_id
             )
         else:
-            # Agar foydalanuvchi bo'lmasa, yaratamiz
             await conn.execute(
                 "INSERT INTO users (user_id, first_start, last_activity) VALUES ($1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
                 user_id
@@ -132,11 +132,29 @@ async def get_total_users():
     try:
         count = await conn.fetchval("SELECT COUNT(*) FROM users")
         return count or 0
+    except Exception as e:
+        print(f"get_total_users xatosi: {e}")
+        return 0
     finally:
         await conn.close()
 
 
-async def get_today_users():
+async def get_today_new_users():
+    """Bugun birinchi marta kelgan yangi foydalanuvchilar soni"""
+    conn = await asyncpg.connect(DATABASE_URL)
+    try:
+        count = await conn.fetchval(
+            "SELECT COUNT(*) FROM users WHERE DATE(first_start) = CURRENT_DATE"
+        )
+        return count or 0
+    except Exception as e:
+        print(f"get_today_new_users xatosi: {e}")
+        return 0
+    finally:
+        await conn.close()
+
+
+async def get_today_active_users():
     """Bugun botga xabar yozgan yoki botni ishga tushirgan foydalanuvchilar"""
     conn = await asyncpg.connect(DATABASE_URL)
     try:
@@ -144,6 +162,9 @@ async def get_today_users():
             "SELECT COUNT(*) FROM users WHERE DATE(last_activity) = CURRENT_DATE"
         )
         return count or 0
+    except Exception as e:
+        print(f"get_today_active_users xatosi: {e}")
+        return 0
     finally:
         await conn.close()
 
@@ -156,6 +177,9 @@ async def get_week_users():
             "SELECT COUNT(*) FROM users WHERE last_activity >= CURRENT_DATE - INTERVAL '7 days'"
         )
         return count or 0
+    except Exception as e:
+        print(f"get_week_users xatosi: {e}")
+        return 0
     finally:
         await conn.close()
 
@@ -168,6 +192,9 @@ async def get_active_users_last_24h():
             "SELECT COUNT(*) FROM users WHERE last_activity >= CURRENT_TIMESTAMP - INTERVAL '24 hours'"
         )
         return count or 0
+    except Exception as e:
+        print(f"get_active_users_last_24h xatosi: {e}")
+        return 0
     finally:
         await conn.close()
 
@@ -178,6 +205,9 @@ async def get_all_user_ids():
     try:
         rows = await conn.fetch("SELECT user_id FROM users")
         return [r["user_id"] for r in rows]
+    except Exception as e:
+        print(f"get_all_user_ids xatosi: {e}")
+        return []
     finally:
         await conn.close()
 
@@ -190,6 +220,8 @@ async def add_video(code: str, file_id: str, description: str = ""):
             "INSERT INTO videos (code, file_id, description) VALUES ($1, $2, $3) ON CONFLICT (code) DO UPDATE SET file_id=$2, description=$3",
             code, file_id, description
         )
+    except Exception as e:
+        print(f"add_video xatosi: {e}")
     finally:
         await conn.close()
 
@@ -199,6 +231,9 @@ async def get_video(code: str):
     try:
         row = await conn.fetchrow("SELECT file_id, description FROM videos WHERE code = $1", code)
         return row
+    except Exception as e:
+        print(f"get_video xatosi: {e}")
+        return None
     finally:
         await conn.close()
 
@@ -207,6 +242,8 @@ async def delete_video(code: str):
     conn = await asyncpg.connect(DATABASE_URL)
     try:
         await conn.execute("DELETE FROM videos WHERE code = $1", code)
+    except Exception as e:
+        print(f"delete_video xatosi: {e}")
     finally:
         await conn.close()
 
@@ -216,6 +253,9 @@ async def list_all_videos():
     try:
         rows = await conn.fetch("SELECT code, description FROM videos ORDER BY code")
         return [(r["code"], r["description"]) for r in rows]
+    except Exception as e:
+        print(f"list_all_videos xatosi: {e}")
+        return []
     finally:
         await conn.close()
 
@@ -225,6 +265,8 @@ async def create_referral(name, code):
     conn = await asyncpg.connect(DATABASE_URL)
     try:
         await conn.execute("INSERT INTO referrals (code, name) VALUES ($1, $2)", code, name)
+    except Exception as e:
+        print(f"create_referral xatosi: {e}")
     finally:
         await conn.close()
 
@@ -234,6 +276,9 @@ async def check_referral_code(code):
     try:
         row = await conn.fetchrow("SELECT code FROM referrals WHERE code = $1", code)
         return row is not None
+    except Exception as e:
+        print(f"check_referral_code xatosi: {e}")
+        return False
     finally:
         await conn.close()
 
@@ -243,6 +288,9 @@ async def get_all_referrals():
     try:
         rows = await conn.fetch("SELECT code, name, count FROM referrals ORDER BY name")
         return [(r["code"], r["name"], r["count"]) for r in rows]
+    except Exception as e:
+        print(f"get_all_referrals xatosi: {e}")
+        return []
     finally:
         await conn.close()
 
@@ -256,6 +304,8 @@ async def set_ad(content_type, file_id=None, text=None, caption=None):
             "INSERT INTO ads (id, content_type, file_id, text, caption, send_count) VALUES (1, $1, $2, $3, $4, 0)",
             content_type, file_id, text, caption
         )
+    except Exception as e:
+        print(f"set_ad xatosi: {e}")
     finally:
         await conn.close()
 
@@ -267,6 +317,9 @@ async def get_ad():
         if row and row["content_type"] != "empty":
             return row
         return None
+    except Exception as e:
+        print(f"get_ad xatosi: {e}")
+        return None
     finally:
         await conn.close()
 
@@ -277,6 +330,8 @@ async def remove_ad():
         await conn.execute(
             "UPDATE ads SET content_type='empty', file_id=NULL, text=NULL, caption=NULL, send_count=0 WHERE id=1"
         )
+    except Exception as e:
+        print(f"remove_ad xatosi: {e}")
     finally:
         await conn.close()
 
@@ -285,6 +340,8 @@ async def increment_ad_count():
     conn = await asyncpg.connect(DATABASE_URL)
     try:
         await conn.execute("UPDATE ads SET send_count = send_count + 1 WHERE id = 1")
+    except Exception as e:
+        print(f"increment_ad_count xatosi: {e}")
     finally:
         await conn.close()
 
@@ -298,6 +355,9 @@ async def get_active_mandatory_subs():
         )
         return [{"id": r["id"], "type": r["type"], "identifier": r["identifier"],
                  "limit": r["limit_count"], "count": r["current_count"]} for r in rows]
+    except Exception as e:
+        print(f"get_active_mandatory_subs xatosi: {e}")
+        return []
     finally:
         await conn.close()
 
@@ -310,16 +370,14 @@ async def is_user_completed_sub(user_id: int, sub_id: int) -> bool:
             user_id, sub_id
         )
         return row is not None
+    except Exception as e:
+        print(f"is_user_completed_sub xatosi: {e}")
+        return False
     finally:
         await conn.close()
 
 
 async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
-    """
-    Foydalanuvchi birinchi marta obunani tasdiqlaganda current_count +1 oshiradi.
-    Agar allaqachon tasdiqlagan bo'lsa, hech narsa qilmaydi.
-    Qaytaradi: agar limitga yetib, obuna o'chirilgan bo'lsa True, aks holda False.
-    """
     conn = await asyncpg.connect(DATABASE_URL)
     try:
         async with conn.transaction():
@@ -351,12 +409,14 @@ async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
                 )
                 deactivated = True
             return deactivated
+    except Exception as e:
+        print(f"mark_user_completed_sub xatosi: {e}")
+        return False
     finally:
         await conn.close()
 
 
 async def set_user_completed_sub(user_id: int, sub_id: int, completed: bool = True):
-    """Faqat user_completed_subs jadvalini yangilaydi, current_count ga tegmaydi"""
     conn = await asyncpg.connect(DATABASE_URL)
     try:
         if completed:
@@ -369,6 +429,8 @@ async def set_user_completed_sub(user_id: int, sub_id: int, completed: bool = Tr
                 "DELETE FROM user_completed_subs WHERE user_id = $1 AND sub_id = $2",
                 user_id, sub_id
             )
+    except Exception as e:
+        print(f"set_user_completed_sub xatosi: {e}")
     finally:
         await conn.close()
 
@@ -380,6 +442,8 @@ async def add_mandatory_subscription(sub_type: str, identifier: str, limit_count
             "INSERT INTO mandatory_subscriptions (type, identifier, limit_count) VALUES ($1, $2, $3)",
             sub_type, identifier, limit_count
         )
+    except Exception as e:
+        print(f"add_mandatory_subscription xatosi: {e}")
     finally:
         await conn.close()
 
@@ -388,6 +452,8 @@ async def remove_mandatory_subscription(sub_id: int):
     conn = await asyncpg.connect(DATABASE_URL)
     try:
         await conn.execute("DELETE FROM mandatory_subscriptions WHERE id = $1", sub_id)
+    except Exception as e:
+        print(f"remove_mandatory_subscription xatosi: {e}")
     finally:
         await conn.close()
 
@@ -399,5 +465,8 @@ async def list_mandatory_subscriptions():
             "SELECT id, type, identifier, limit_count, current_count, is_active FROM mandatory_subscriptions ORDER BY id"
         )
         return rows
+    except Exception as e:
+        print(f"list_mandatory_subscriptions xatosi: {e}")
+        return []
     finally:
         await conn.close()
