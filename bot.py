@@ -16,8 +16,8 @@ from dotenv import load_dotenv
 from config import BOT_TOKEN, ADMIN_ID
 from database import (
     init_db, add_video, get_video, delete_video, list_all_videos,
-    register_user_start, get_total_users, get_today_users,
-    get_week_users, get_active_users_last_24h, update_user_activity,
+    register_user_start, get_total_users, get_today_new_users,
+    get_today_active_users, get_week_users, get_active_users_last_24h, update_user_activity,
     get_all_user_ids, create_referral, check_referral_code, get_all_referrals,
     set_ad, get_ad, remove_ad, increment_ad_count,
     get_active_mandatory_subs, is_user_completed_sub, mark_user_completed_sub,
@@ -115,11 +115,10 @@ async def show_mandatory_subs(update: Update, context: CallbackContext):
     context.user_data["mandatory_msg_id"] = sent_msg.message_id
     return False
 
-# --- Majburiy obunani real vaqtda tekshirish (PARALLEL + CACHE) ---
+# --- Majburiy obunani real vaqtda tekshirish ---
 async def check_and_handle_mandatory_subs(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
 
-    # Keshlash: 30 soniya davomida qayta tekshirmaymiz
     cache_key = "sub_check_cache"
     cache_time_key = "sub_check_time"
     current_time = time.time()
@@ -137,7 +136,6 @@ async def check_and_handle_mandatory_subs(update: Update, context: CallbackConte
         context.user_data[cache_time_key] = current_time
         return False
 
-    # Barcha tekshiruvlarni parallel bajarish
     async def check_sub(sub):
         if sub["type"] == "telegram":
             identifier = sub["identifier"]
@@ -173,7 +171,7 @@ async def check_and_handle_mandatory_subs(update: Update, context: CallbackConte
         context.user_data[cache_key] = False
         return False
 
-# -------------------- Callback: barcha obunalarni tasdiqlash --------------------
+# -------------------- Callback --------------------
 async def confirm_all_subs_callback(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
@@ -198,7 +196,6 @@ async def confirm_all_subs_callback(update: Update, context: CallbackContext):
         await start_after_subs(update, context)
         return
 
-    # Telegram kanallarini parallel tekshirish
     async def check_telegram_sub(sub):
         identifier = sub["identifier"]
         if not identifier.startswith("@"):
@@ -251,10 +248,10 @@ async def start_after_subs(update: Update, context: CallbackContext):
     )
     asyncio.create_task(send_ad(context.bot, user_id))
 
-# -------------------- Start (faqat private) --------------------
+# -------------------- Start --------------------
 async def start(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
-    await update_user_activity(user_id)  # Faollikni yangilash
+    await update_user_activity(user_id)
 
     referral_code = context.args[0] if context.args else None
     await register_user_start(user_id, referral_code)
@@ -293,14 +290,18 @@ async def stats(update: Update, context: CallbackContext):
     if update.effective_user.id != ADMIN_ID:
         await update.message.reply_text("⛔ Siz admin emassiz!")
         return
+    
     total = await get_total_users()
-    today = await get_today_users()
+    today_new = await get_today_new_users()
+    today_active = await get_today_active_users()
     week = await get_week_users()
     active = await get_active_users_last_24h()
+    
     await update.message.reply_text(
         f"📊 Statistika\n\n"
         f"👥 Umumiy: {total}\n"
-        f"🆕 Bugun faol: {today}\n"
+        f"🆕 Bugun yangi: {today_new}\n"
+        f"📊 Bugun faol: {today_active}\n"
         f"📅 7 kunda faol: {week}\n"
         f"🟢 24 soatda faol: {active}"
     )
@@ -440,7 +441,7 @@ async def createref_get_name(update: Update, context: CallbackContext):
     if not name:
         await update.message.reply_text("❌ Iltimos, bo'sh bo'lmagan nom kiriting.")
         return WAITING_REF_NAME
-    bot_username = "KINO_bor_botbot"  # O'z bot username bilan almashtiring
+    bot_username = "KINO_bor_botbot"
     while True:
         code = secrets.token_hex(3)
         if not await check_referral_code(code):
@@ -586,10 +587,10 @@ async def list_mandatory(update: Update, context: CallbackContext):
 
     await update.message.reply_text(text)
 
-# -------------------- Kod yuborish (faqat private) --------------------
+# -------------------- Kod yuborish --------------------
 async def handle_code(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
-    await update_user_activity(user_id)  # Faollikni yangilash
+    await update_user_activity(user_id)
 
     if await check_and_handle_mandatory_subs(update, context):
         return
