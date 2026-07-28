@@ -57,7 +57,6 @@ async def init_db():
                 limit_count INTEGER NOT NULL,
                 current_count INTEGER DEFAULT 0,
                 is_active INTEGER DEFAULT 1,
-                chat_id BIGINT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
@@ -207,7 +206,7 @@ async def increment_ad_count():
 async def get_active_mandatory_subs():
     async with pool.acquire() as conn:
         rows = await conn.fetch(
-            "SELECT id, type, identifier, limit_count, current_count, chat_id "
+            "SELECT id, type, identifier, limit_count, current_count "
             "FROM mandatory_subscriptions WHERE is_active = 1 ORDER BY id"
         )
         return [
@@ -216,8 +215,7 @@ async def get_active_mandatory_subs():
                 "type": r["type"],
                 "identifier": r["identifier"],
                 "limit": r["limit_count"],
-                "count": r["current_count"],
-                "chat_id": r["chat_id"]
+                "count": r["current_count"]
             }
             for r in rows
         ]
@@ -255,14 +253,13 @@ async def mark_user_completed_sub(user_id: int, sub_id: int) -> bool:
                 "SELECT current_count, limit_count FROM mandatory_subscriptions WHERE id = $1",
                 sub_id
             )
-            deactivated = False
             if row and row["current_count"] >= row["limit_count"]:
                 await conn.execute(
                     "UPDATE mandatory_subscriptions SET is_active = 0 WHERE id = $1",
                     sub_id
                 )
-                deactivated = True
-            return deactivated
+                return True
+            return False
 
 
 async def set_user_completed_sub(user_id: int, sub_id: int, completed: bool = True):
@@ -279,12 +276,11 @@ async def set_user_completed_sub(user_id: int, sub_id: int, completed: bool = Tr
             )
 
 
-async def add_mandatory_subscription(sub_type: str, identifier: str, limit_count: int, chat_id: int = None):
+async def add_mandatory_subscription(sub_type: str, identifier: str, limit_count: int):
     async with pool.acquire() as conn:
         await conn.execute(
-            "INSERT INTO mandatory_subscriptions (type, identifier, limit_count, chat_id) "
-            "VALUES ($1, $2, $3, $4)",
-            sub_type, identifier, limit_count, chat_id
+            "INSERT INTO mandatory_subscriptions (type, identifier, limit_count) VALUES ($1, $2, $3)",
+            sub_type, identifier, limit_count
         )
 
 
@@ -296,7 +292,7 @@ async def remove_mandatory_subscription(sub_id: int):
 async def list_mandatory_subscriptions():
     async with pool.acquire() as conn:
         rows = await conn.fetch(
-            "SELECT id, type, identifier, limit_count, current_count, is_active, chat_id "
+            "SELECT id, type, identifier, limit_count, current_count, is_active "
             "FROM mandatory_subscriptions ORDER BY id"
         )
         return rows
