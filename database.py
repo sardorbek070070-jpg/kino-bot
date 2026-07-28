@@ -57,6 +57,7 @@ async def init_db():
                 limit_count INTEGER NOT NULL,
                 current_count INTEGER DEFAULT 0,
                 is_active INTEGER DEFAULT 1,
+                chat_id BIGINT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
@@ -206,7 +207,7 @@ async def increment_ad_count():
 async def get_active_mandatory_subs():
     async with pool.acquire() as conn:
         rows = await conn.fetch(
-            "SELECT id, type, identifier, limit_count, current_count "
+            "SELECT id, type, identifier, limit_count, current_count, chat_id "
             "FROM mandatory_subscriptions WHERE is_active = 1 ORDER BY id"
         )
         return [
@@ -215,7 +216,8 @@ async def get_active_mandatory_subs():
                 "type": r["type"],
                 "identifier": r["identifier"],
                 "limit": r["limit_count"],
-                "count": r["current_count"]
+                "count": r["current_count"],
+                "chat_id": r["chat_id"]
             }
             for r in rows
         ]
@@ -276,11 +278,12 @@ async def set_user_completed_sub(user_id: int, sub_id: int, completed: bool = Tr
             )
 
 
-async def add_mandatory_subscription(sub_type: str, identifier: str, limit_count: int):
+async def add_mandatory_subscription(sub_type: str, identifier: str, limit_count: int, chat_id: int = None):
     async with pool.acquire() as conn:
         await conn.execute(
-            "INSERT INTO mandatory_subscriptions (type, identifier, limit_count) VALUES ($1, $2, $3)",
-            sub_type, identifier, limit_count
+            "INSERT INTO mandatory_subscriptions (type, identifier, limit_count, chat_id) "
+            "VALUES ($1, $2, $3, $4)",
+            sub_type, identifier, limit_count, chat_id
         )
 
 
@@ -292,7 +295,7 @@ async def remove_mandatory_subscription(sub_id: int):
 async def list_mandatory_subscriptions():
     async with pool.acquire() as conn:
         rows = await conn.fetch(
-            "SELECT id, type, identifier, limit_count, current_count, is_active "
+            "SELECT id, type, identifier, limit_count, current_count, is_active, chat_id "
             "FROM mandatory_subscriptions ORDER BY id"
         )
         return rows
